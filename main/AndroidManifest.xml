@@ -30,7 +30,7 @@
 
         <activity
             android:name=".Level1"
-            android:screenOrientation="portrait">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
