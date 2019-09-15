@@ -1,9 +1,11 @@
 package edu.amd.spbstu.jumper;
 
 import android.content.Context;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -52,21 +54,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameThread = new GameThread(holder);
 
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        Player player = AppConstants.getGameEngine().player;
-
-        if (action == MotionEvent.ACTION_DOWN) {
-            AppConstants.getGameEngine().gameState = GameStates.PLAYING;
-            player.setVelocity(AppConstants.jumpVelocity);
-        }
-
-        return true;
-    }
-
-
 
 
 

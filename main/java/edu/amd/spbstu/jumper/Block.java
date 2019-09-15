@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class Block {
     private BlockType type;
     private int degree;
-    private int x, y, width = 64, height = 64;
+    private int x, y;
+    private double initVelocity;
 
     public Block(BlockType type, int x, int y) {
         this.type = type;
@@ -19,6 +20,7 @@ public class Block {
         }
         this.x = x;
         this.y = y;
+        this.initVelocity = 30.0;
     }
 
     public BlockType getType() {
@@ -35,6 +37,10 @@ public class Block {
 
     public int getY() {
         return y;
+    }
+
+    public double getInitVelocity() {
+        return initVelocity;
     }
 }
 

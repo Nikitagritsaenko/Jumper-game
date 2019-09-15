@@ -13,6 +13,7 @@ public class GameThread extends Thread {
     boolean isRunning;
     long startTime, loopTime;
     long delay = 33;
+    public static int level = 1;
 
     public GameThread(SurfaceHolder holder) {
         this.surfaceHolder = holder;
@@ -27,8 +28,10 @@ public class GameThread extends Thread {
             if (canvas != null) {
                 synchronized (surfaceHolder) {
                     AppConstants.getGameEngine().updateAndDrawBackgroundImage(canvas);
-                    AppConstants.getGameEngine().updateAndDrawPlayer(canvas);
                     AppConstants.getGameEngine().updateBlocks(canvas);
+                    AppConstants.getGameEngine().updateAndDrawPlayer(canvas);
+                    AppConstants.getGameEngine().updateCollision();
+
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             }

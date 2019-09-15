@@ -9,14 +9,14 @@ import edu.amd.spbstu.jumper.BlockType;
 
 
 public class LevelGenerator {
-    private static Integer[] x = {0,0,0};
-    private static Integer[] y = {0,0,0};
+    private static Integer[] x = new Integer[6];
+    private static Integer[] y = new Integer[6];
 
     public static ArrayList<Block> generateBlocks(int level) {
 
         if (level == 1) {
-           x[0] = 100; x[1] = 400; x[2] = 700;
-           y[0] = 400; y[1] = 400; y[2] = 400;
+           x[0] = 100; x[1] = 400; x[2] = 700; x[3] = 1000; x[4] = 1300; x[5] = 1600;
+           y[0] = 400; y[1] = 450; y[2] = 350; y[3] = 600; y[4] = 400; y[5] = 650;
         }
         ArrayList<Block> blocks = new ArrayList<>();
         int len = AppConstants.getBitmapBank().getBlocksNum();
@@ -32,5 +32,13 @@ public class LevelGenerator {
         Block block_end = new Block(BlockType.END, x[len-1], y[len-1]);
         blocks.add(len-1, block_end);
         return blocks;
+    }
+
+    public static int getBlockNum(int level) {
+        if (level == 1) {
+            return x.length;
+        }
+        else
+            return 0;
     }
 }

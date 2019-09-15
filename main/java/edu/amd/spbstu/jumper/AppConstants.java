@@ -13,9 +13,12 @@ public class AppConstants {
     static BitmapBank bitmapBank;
     static int SCREEN_WIDTH;
     static int SCREEN_HEIGHT;
-    static int gravity = 3;
-    static int velocity = 0;
-    static int jumpVelocity = -40;
+    static double gravity = 2.0;
+    static int gridStep = 300;
+    static int playerH;
+    static int playerW;
+    static int blockW;
+    static int blockH;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static void initialization(Context context) {
@@ -32,20 +35,13 @@ public class AppConstants {
         return bitmapBank;
     }
 
-    public void setVelocity(int velocity) {
-        this.velocity = velocity;
-    }
 
-    public void setGravity(int gravity) {
+    public void setGravity(double gravity) {
 
         this.gravity = gravity;
     }
 
-    public int getVelocity() {
-        return velocity;
-    }
-
-    public int getGravity() {
+    public double getGravity() {
         return gravity;
     }
 
@@ -55,7 +51,7 @@ public class AppConstants {
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getRealMetrics(metrics);
-        SCREEN_WIDTH = metrics.widthPixels;
-        SCREEN_HEIGHT = metrics.heightPixels;
+        SCREEN_HEIGHT = metrics.widthPixels; // no mistake here
+        SCREEN_WIDTH = metrics.heightPixels;
     }
 }

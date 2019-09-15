@@ -11,12 +11,12 @@ public class BitmapBank {
     private Bitmap background;
     private Bitmap player;
     private Bitmap[] blocks;
-    private int blocks_num = 3;
+    private int blocks_num = LevelGenerator.getBlockNum(GameThread.level);
 
 
 
     public Bitmap scaleImage(Bitmap bitmap) {
-        return Bitmap.createScaledBitmap(bitmap, (int)(AppConstants.SCREEN_HEIGHT), (int)(AppConstants.SCREEN_WIDTH), false);
+        return Bitmap.createScaledBitmap(bitmap, (int)(AppConstants.SCREEN_WIDTH), (int)(AppConstants.SCREEN_HEIGHT), false);
     }
 
     public BitmapBank(Resources res) {
@@ -27,6 +27,10 @@ public class BitmapBank {
         for (int i = 0; i < blocks_num; i++) {
             blocks[i] = BitmapFactory.decodeResource(res, R.drawable.ice_cube_mini);
         }
+        AppConstants.blockH = blocks[0].getHeight();
+        AppConstants.blockW = blocks[0].getWidth();
+        AppConstants.playerW = player.getWidth();
+        AppConstants.playerH = player.getHeight();
     }
 
     public Bitmap getBackground() {

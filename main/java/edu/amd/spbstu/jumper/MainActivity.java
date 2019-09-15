@@ -39,9 +39,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        Window w = getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         AppConstants.initialization(this.getApplicationContext());
+
+        Window w = getWindow();
+
+        w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     //system back button
