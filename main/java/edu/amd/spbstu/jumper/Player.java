@@ -6,6 +6,7 @@ public class Player {
     private double X;
     private double Y;
     private double velocity;
+    private boolean isFlipped = false;
 
     public double getVelocity() {
         return velocity;
@@ -14,7 +15,6 @@ public class Player {
     public void setVelocity(double velocity) {
         this.velocity = velocity;
     }
-
 
     public Player() {
         velocity = 0;
@@ -37,23 +37,28 @@ public class Player {
     }
 
     public void moveRight() {
-        double newX = this.X + AppConstants.gridStep;
-        if (newX > AppConstants.SCREEN_WIDTH - AppConstants.playerW) {
-            this.X = AppConstants.SCREEN_WIDTH - AppConstants.playerW;
+        if (isFlipped == true) {
+            AppConstants.getBitmapBank().flipPlayer();
+            isFlipped = false;
         }
-        else {
-            this.X = newX;
-        }
+        GameEngine.setMovingRight(true);
+
     }
 
     public void moveLeft() {
-        double newX = this.X - AppConstants.gridStep;
-        if (newX < 0) {
-            this.X = 0;
+        if (isFlipped == false) {
+            AppConstants.getBitmapBank().flipPlayer();
+            isFlipped = true;
         }
-        else {
-            this.X = newX;
-        }
+        GameEngine.setMovingLeft(true);
     }
 
+
+    public void setFlipped(boolean flipped) {
+        isFlipped = flipped;
+    }
+
+    public boolean isFlipped() {
+        return isFlipped;
+    }
 }

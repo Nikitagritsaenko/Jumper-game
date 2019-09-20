@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.widget.RelativeLayout;
 import android.view.View;
 
 public class GameThread extends Thread {
@@ -13,7 +12,6 @@ public class GameThread extends Thread {
     boolean isRunning;
     long startTime, loopTime;
     long delay = 33;
-    public static int level = 1;
 
     public GameThread(SurfaceHolder holder) {
         this.surfaceHolder = holder;

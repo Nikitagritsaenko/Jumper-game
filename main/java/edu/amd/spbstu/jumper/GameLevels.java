@@ -1,6 +1,7 @@
 package edu.amd.spbstu.jumper;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -8,13 +9,16 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GameLevels extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.gamelevels);
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -23,7 +27,9 @@ public class GameLevels extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new Intent(GameLevels.this, MainActivity.class);
+                    AppConstants.getSoundPlayer().playClickSound();
+
+                    Intent intent = new Intent(GameLevels.this, GameMenu.class);
                     startActivity(intent);
                     finish();
 
@@ -33,20 +39,26 @@ public class GameLevels extends AppCompatActivity {
             }
         });
 
-        // goto 1st lvl
-        TextView textWiew1 = (TextView)findViewById(R.id.textView1);
-        textWiew1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent intent = new Intent(GameLevels.this, Level1.class);
-                    startActivity(intent);
-                    finish();
-                }catch (Exception e) {
+        for (Integer i = 1; i <= 20; i++) {
+            String id = "textView" + Integer.toString(i);
+            int resID = getResources().getIdentifier(id, "id", getPackageName());
+            TextView textView = (TextView) findViewById(resID);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        AppConstants.getSoundPlayer().playClickSound();
+                        Intent intent = new Intent(GameLevels.this, Level.class);
+                        startActivity(intent);
+                        finish();
+                    } catch (Exception e) {
 
+                    }
                 }
-            }
-        });
+            });
+            //// SET lvl???
+        }
+        AppConstants.setCurrLevel(1); /////
 
     }
 
@@ -54,7 +66,7 @@ public class GameLevels extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         try {
-            Intent intent = new Intent(GameLevels.this, MainActivity.class);
+            Intent intent = new Intent(GameLevels.this, GameMenu.class);
             startActivity(intent);
             finish();
         }
@@ -62,4 +74,11 @@ public class GameLevels extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+
 }

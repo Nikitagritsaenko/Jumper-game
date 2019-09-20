@@ -1,8 +1,5 @@
 package edu.amd.spbstu.jumper;
 
-import java.util.ArrayList;
-
-
 
 public class Block {
     private BlockType type;

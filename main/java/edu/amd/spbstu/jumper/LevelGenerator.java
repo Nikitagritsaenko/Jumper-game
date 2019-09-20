@@ -1,11 +1,6 @@
 package edu.amd.spbstu.jumper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Map;
-
-import edu.amd.spbstu.jumper.Block;
-import edu.amd.spbstu.jumper.BlockType;
 
 
 public class LevelGenerator {
@@ -14,10 +9,9 @@ public class LevelGenerator {
 
     public static ArrayList<Block> generateBlocks(int level) {
 
-        if (level == 1) {
-           x[0] = 100; x[1] = 400; x[2] = 700; x[3] = 1000; x[4] = 1300; x[5] = 1600;
-           y[0] = 400; y[1] = 450; y[2] = 350; y[3] = 600; y[4] = 400; y[5] = 650;
-        }
+        x[0] = 100; x[1] = 400; x[2] = 700; x[3] = 1000; x[4] = 1300; x[5] = 1600;
+        y[0] = 400; y[1] = 450; y[2] = 350; y[3] = 600; y[4] = 400; y[5] = 650;
+
         ArrayList<Block> blocks = new ArrayList<>();
         int len = AppConstants.getBitmapBank().getBlocksNum();
 
@@ -39,6 +33,6 @@ public class LevelGenerator {
             return x.length;
         }
         else
-            return 0;
+            return x.length;
     }
 }
