@@ -62,7 +62,7 @@ public class SoundPlayer {
     }
 
     public void playFallingSound() {
-        soundPool.play(fallingSound, volume, volume, 1, 0, 1.0f);
+        soundPool.play(fallingSound, volume * 0.5f, volume * 0.5f, 1, 0, 1.0f);
     }
 
     public void playPunchSound() {

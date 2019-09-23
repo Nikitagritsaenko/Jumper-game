@@ -12,6 +12,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class GameMenu extends AppCompatActivity {
     private long backPressedTime;
     private Toast backToast;
@@ -34,11 +37,13 @@ public class GameMenu extends AppCompatActivity {
                 }
             }
         });
-        AppConstants.initialization(this.getApplicationContext());
 
         Window w = getWindow();
 
         w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        AppConstants.initialization(this.getApplicationContext());
+
     }
 
     //system back button

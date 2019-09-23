@@ -16,8 +16,9 @@ public class AppConstants {
     private static SoundPlayer soundPlayer;
     private static int SCREEN_WIDTH;
     private static int SCREEN_HEIGHT;
-    private static double gravity = 2.0;
-    private static double gridStep = 300;
+
+    private static double gravity = 3.0;
+    private static double gridStep;
     private static int playerH;
     private static int playerW;
     private static int blockW;
@@ -109,8 +110,13 @@ public class AppConstants {
         return currLevel;
     }
 
+    public static void setGridStep(double gridStep) {
+        AppConstants.gridStep = gridStep;
+    }
+
     public static void setCurrLevel(int currLevel) {
         AppConstants.currLevel = currLevel;
+        AppConstants.getGameEngine().restartGame();
     }
 
 

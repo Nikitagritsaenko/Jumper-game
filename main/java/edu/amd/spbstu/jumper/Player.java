@@ -1,7 +1,5 @@
 package edu.amd.spbstu.jumper;
 
-import android.util.Log;
-
 public class Player {
     private double X;
     private double Y;
@@ -37,7 +35,10 @@ public class Player {
     }
 
     public void moveRight() {
-        if (isFlipped == true) {
+        if (AppConstants.getGameEngine().getGameState() == GameStates.PAUSED) {
+            return;
+        }
+        if (isFlipped) {
             AppConstants.getBitmapBank().flipPlayer();
             isFlipped = false;
         }
@@ -46,7 +47,10 @@ public class Player {
     }
 
     public void moveLeft() {
-        if (isFlipped == false) {
+        if (AppConstants.getGameEngine().getGameState() == GameStates.PAUSED) {
+            return;
+        }
+        if (!isFlipped) {
             AppConstants.getBitmapBank().flipPlayer();
             isFlipped = true;
         }

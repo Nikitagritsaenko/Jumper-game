@@ -42,12 +42,17 @@ public class GameLevels extends AppCompatActivity {
         for (Integer i = 1; i <= 20; i++) {
             String id = "textView" + Integer.toString(i);
             int resID = getResources().getIdentifier(id, "id", getPackageName());
-            TextView textView = (TextView) findViewById(resID);
+            final TextView textView = (TextView) findViewById(resID);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     try {
                         AppConstants.getSoundPlayer().playClickSound();
+                        String name = getResources().getResourceName(textView.getId());
+                        name = name.split("textView")[1];
+                        int level = Integer.parseInt(name);
+                        AppConstants.setCurrLevel(level);
+
                         Intent intent = new Intent(GameLevels.this, Level.class);
                         startActivity(intent);
                         finish();
@@ -56,9 +61,7 @@ public class GameLevels extends AppCompatActivity {
                     }
                 }
             });
-            //// SET lvl???
         }
-        AppConstants.setCurrLevel(1); /////
 
     }
 

@@ -4,14 +4,13 @@ import android.graphics.Canvas;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.View;
 
 public class GameThread extends Thread {
 
-    SurfaceHolder surfaceHolder;
-    boolean isRunning;
-    long startTime, loopTime;
-    long delay = 33;
+    private SurfaceHolder surfaceHolder;
+    private boolean isRunning;
+    private long startTime, loopTime;
+    private long delay = 33;
 
     public GameThread(SurfaceHolder holder) {
         this.surfaceHolder = holder;
@@ -29,6 +28,7 @@ public class GameThread extends Thread {
                     AppConstants.getGameEngine().updateBlocks(canvas);
                     AppConstants.getGameEngine().updateAndDrawPlayer(canvas);
                     AppConstants.getGameEngine().updateCollision();
+                    AppConstants.getGameEngine().updateAutoPlaying();
 
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }

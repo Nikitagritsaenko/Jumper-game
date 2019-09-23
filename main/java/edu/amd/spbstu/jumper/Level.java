@@ -1,14 +1,17 @@
 package edu.amd.spbstu.jumper;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 
@@ -17,6 +20,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     GestureDetector gDetector;
     SoundPlayer soundPlayer;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("CREATE");
@@ -32,7 +36,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        //disableSystemButtons();
+        disableSystemButtons();
 
         soundPlayer = AppConstants.getSoundPlayer();
         soundPlayer.playMenuSound();
@@ -57,6 +61,9 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
 
     @Override
     public boolean onFling(MotionEvent start, MotionEvent finish, float xVelocity, float yVelocity) {
+        if (AppConstants.getGameEngine().isAutoPlay()) {
+            return false;
+        }
         Player player = AppConstants.getGameEngine().getPlayer();
         if (start.getRawX() < finish.getRawX()) {
             player.moveRight();
@@ -68,6 +75,8 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
 
     @Override
     public void onLongPress(MotionEvent arg0) {
+
+
     }
 
     @Override
@@ -104,6 +113,11 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
                 AppConstants.getGameEngine().setSoundOn(true);
             }
         }
+
+        if (x < AppConstants.pauseW && y < AppConstants.pauseW) {
+            //////////
+        }
+
 
         return false;
     }

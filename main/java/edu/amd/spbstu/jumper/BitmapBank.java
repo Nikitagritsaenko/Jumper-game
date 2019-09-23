@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
+import static java.lang.Math.min;
+import static java.lang.Math.round;
+
 public class BitmapBank {
 
     private Bitmap background;
@@ -15,9 +18,13 @@ public class BitmapBank {
     private Bitmap play;
     private Bitmap soundOn;
     private Bitmap soundOff;
+    private Bitmap b, b_special;
 
-    private int blocks_num = LevelGenerator.getBlockNum(AppConstants.getCurrLevel());
+    private double step;
+    private int numBlocksX;
+    private int numBlocksY;
 
+    private int numBlocks;
 
     private Bitmap squeezeImage(Bitmap bitmap, int squeeze) {
         int h = bitmap.getHeight();
@@ -31,6 +38,34 @@ public class BitmapBank {
 
     private Bitmap scaleImage(Bitmap bitmap) {
         return Bitmap.createScaledBitmap(bitmap, (int)(AppConstants.getScreenWidth()), (int)(AppConstants.getScreenHeight()), false);
+    }
+
+    public void scalePlayer(double scale) {
+        player = Bitmap.createScaledBitmap(player, (int)scale, (int)scale, false);
+        AppConstants.setPlayerW(player.getWidth());
+        AppConstants.setPlayerH(player.getHeight());
+    }
+
+    public void initBlocks(){
+        if (blocks == null) {
+            blocks = new Bitmap[numBlocks];
+
+            blocks[0] = b_special;
+            blocks[0] = setImageSize(blocks[0], player.getWidth(), player.getHeight());
+
+            for (int i = 1; i < numBlocks - 1; i++) {
+                blocks[i] = b;
+                blocks[i] = setImageSize(blocks[i], player.getWidth(), player.getHeight());
+            }
+
+
+            blocks[numBlocks - 1] = b_special;
+            blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight());
+
+            AppConstants.setBlockH(blocks[0].getHeight());
+            AppConstants.setBlockW(blocks[0].getWidth());
+            AppConstants.setBlockW(blocks[0].getWidth());
+        }
     }
 
     public BitmapBank(Resources res) {
@@ -47,18 +82,9 @@ public class BitmapBank {
         background = BitmapFactory.decodeResource(res, R.drawable.background2);
         background = scaleImage(background);
         player = BitmapFactory.decodeResource(res, R.drawable.penguine);
+        b = BitmapFactory.decodeResource(res, R.drawable.ice_cube);
+        b_special = BitmapFactory.decodeResource(res, R.drawable.ice_cube_special);
 
-        player = squeezeImage(player, 2);
-
-        blocks = new Bitmap[blocks_num];
-        for (int i = 0; i < blocks_num; i++) {
-            blocks[i] = BitmapFactory.decodeResource(res, R.drawable.ice_cube);
-            blocks[i] = setImageSize(blocks[i], player.getWidth(), player.getHeight());
-        }
-        AppConstants.setBlockH(blocks[0].getHeight());
-        AppConstants.setBlockW(blocks[0].getWidth());
-        AppConstants.setPlayerW(player.getWidth());
-        AppConstants.setPlayerH(player.getHeight());
 
         AppConstants.pauseH = pause.getHeight();
         AppConstants.pauseW = pause.getWidth();
@@ -75,6 +101,7 @@ public class BitmapBank {
         AppConstants.soundX = AppConstants.restartX - soundOn.getWidth();
         AppConstants.soundY = 0;
 
+
     }
 
     public void flipPlayer() {
@@ -86,8 +113,6 @@ public class BitmapBank {
     public Bitmap getBackground() {
         return background;
     }
-
-    public int getBlocksNum() { return blocks_num; }
 
     public Bitmap[] getBlocks() { return blocks; }
 
@@ -115,8 +140,28 @@ public class BitmapBank {
         return soundOff;
     }
 
-    public int getBlocks_num() {
-        return blocks_num;
+    public int getBlocksNum() {
+        return numBlocks;
+    }
+
+    public void setBlocksNum(int num) {
+        numBlocks = num;
+    }
+
+    public double getStep() {
+        return step;
+    }
+
+    public int getNumBlocksX() {
+        return numBlocksX;
+    }
+
+    public int getNumBlocksY() {
+        return numBlocksY;
+    }
+
+    public int getNumBlocks() {
+        return numBlocks;
     }
 
     public int getBackgroundWidth() {
@@ -125,6 +170,22 @@ public class BitmapBank {
 
     public int getBackgroundHeight() {
         return background.getHeight();
+    }
+
+    public void setStep(double step) {
+        this.step = step;
+    }
+
+    public void setNumBlocksX(int numBlocksX) {
+        this.numBlocksX = numBlocksX;
+    }
+
+    public void setNumBlocksY(int numBlocksY) {
+        this.numBlocksY = numBlocksY;
+    }
+
+    public void setNumBlocks(int numBlocks) {
+        this.numBlocks = numBlocks;
     }
 }
 
