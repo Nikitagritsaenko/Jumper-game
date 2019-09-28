@@ -24,13 +24,16 @@ public class GameThread extends Thread {
             Canvas canvas = surfaceHolder.lockCanvas(null);
             if (canvas != null) {
                 synchronized (surfaceHolder) {
-                    AppConstants.getGameEngine().updateAndDrawBackgroundImage(canvas);
-                    AppConstants.getGameEngine().updateBlocks(canvas);
-                    AppConstants.getGameEngine().updateAndDrawPlayer(canvas);
-                    AppConstants.getGameEngine().updateCollision();
-                    AppConstants.getGameEngine().updateAutoPlaying();
+                    //if (AppConstants.getGameEngine() != null && !AppConstants.getGameEngine().isRestarting()) {
 
-                    surfaceHolder.unlockCanvasAndPost(canvas);
+                        AppConstants.getGameEngine().updateAndDrawBackgroundImage(canvas);
+                        AppConstants.getGameEngine().updateBlocks(canvas);
+                        AppConstants.getGameEngine().updateAndDrawPlayer(canvas);
+                        AppConstants.getGameEngine().updateCollision();
+                        AppConstants.getGameEngine().updateAutoPlaying();
+
+                        surfaceHolder.unlockCanvasAndPost(canvas);
+                    //}
                 }
             }
             loopTime = SystemClock.uptimeMillis() - startTime;

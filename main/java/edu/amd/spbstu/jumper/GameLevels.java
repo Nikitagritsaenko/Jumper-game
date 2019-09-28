@@ -39,7 +39,7 @@ public class GameLevels extends AppCompatActivity {
             }
         });
 
-        for (Integer i = 1; i <= 20; i++) {
+        for (Integer i = 1; i <= AppConstants.getNumLevels(); i++) {
             String id = "textView" + Integer.toString(i);
             int resID = getResources().getIdentifier(id, "id", getPackageName());
             final TextView textView = (TextView) findViewById(resID);

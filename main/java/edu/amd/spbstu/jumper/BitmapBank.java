@@ -9,6 +9,7 @@ import static java.lang.Math.min;
 import static java.lang.Math.round;
 
 public class BitmapBank {
+    Resources resources;
 
     private Bitmap background;
     private Bitmap player;
@@ -16,6 +17,7 @@ public class BitmapBank {
     private Bitmap pause;
     private Bitmap restart;
     private Bitmap play;
+    private Bitmap exit;
     private Bitmap soundOn;
     private Bitmap soundOff;
     private Bitmap b, b_special;
@@ -41,6 +43,7 @@ public class BitmapBank {
     }
 
     public void scalePlayer(double scale) {
+        player = BitmapFactory.decodeResource(resources, R.drawable.penguine);
         player = Bitmap.createScaledBitmap(player, (int)scale, (int)scale, false);
         AppConstants.setPlayerW(player.getWidth());
         AppConstants.setPlayerH(player.getHeight());
@@ -50,12 +53,19 @@ public class BitmapBank {
         if (blocks == null) {
             blocks = new Bitmap[numBlocks];
 
+            int startIdx = AppConstants.getGameEngine().getStartIdx();
+            int endIdx   = AppConstants.getGameEngine().getEndIdx();
+
             blocks[0] = b_special;
             blocks[0] = setImageSize(blocks[0], player.getWidth(), player.getHeight());
 
-            for (int i = 1; i < numBlocks - 1; i++) {
-                blocks[i] = b;
-                blocks[i] = setImageSize(blocks[i], player.getWidth(), player.getHeight());
+            int j = 1;
+            for (int i = 0; i < numBlocks; i++) {
+                if (i != startIdx && i != endIdx) {
+                    blocks[j] = b;
+                    blocks[j] = setImageSize(blocks[j], player.getWidth(), player.getHeight());
+                    j++;
+                }
             }
 
 
@@ -64,11 +74,12 @@ public class BitmapBank {
 
             AppConstants.setBlockH(blocks[0].getHeight());
             AppConstants.setBlockW(blocks[0].getWidth());
-            AppConstants.setBlockW(blocks[0].getWidth());
         }
     }
 
     public BitmapBank(Resources res) {
+        resources = res;
+
         pause = BitmapFactory.decodeResource(res, R.drawable.pause);
         restart = BitmapFactory.decodeResource(res, R.drawable.restart);
         restart = setImageSize(restart, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
@@ -78,6 +89,8 @@ public class BitmapBank {
         soundOn = setImageSize(soundOn, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
         soundOff = BitmapFactory.decodeResource(res, R.drawable.no_audio);
         soundOff = setImageSize(soundOff, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
+        exit = BitmapFactory.decodeResource(res, R.drawable.exit);
+        exit = setImageSize(exit, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
 
         background = BitmapFactory.decodeResource(res, R.drawable.background2);
         background = scaleImage(background);
@@ -85,6 +98,10 @@ public class BitmapBank {
         b = BitmapFactory.decodeResource(res, R.drawable.ice_cube);
         b_special = BitmapFactory.decodeResource(res, R.drawable.ice_cube_special);
 
+        AppConstants.exitH = exit.getHeight();
+        AppConstants.exitW = exit.getWidth();
+        AppConstants.exitX = AppConstants.getScreenWidth() - 2 * pause.getWidth();
+        AppConstants.exitY = 0;
 
         AppConstants.pauseH = pause.getHeight();
         AppConstants.pauseW = pause.getWidth();
@@ -116,6 +133,10 @@ public class BitmapBank {
 
     public Bitmap[] getBlocks() { return blocks; }
 
+    public void setBlocks(Bitmap[] blocks) {
+        this.blocks = blocks;
+    }
+
     public Bitmap getPlayer() {
         return player;
     }
@@ -126,6 +147,10 @@ public class BitmapBank {
 
     public Bitmap getRestart() {
         return restart;
+    }
+
+    public Bitmap getExit() {
+        return exit;
     }
 
     public Bitmap getPlay() {

@@ -13,6 +13,7 @@ import static java.lang.Math.min;
 public class LevelGenerator {
     private ArrayList<LevelData> data = new ArrayList<>();
     private int sizeX, sizeY;
+    private int startIdx, endIdx;
     private static Integer[] x;
     private static Integer[] y;
 
@@ -23,12 +24,13 @@ public class LevelGenerator {
 
         double stepX = AppConstants.getScreenWidth() / (sizeX + 1);
         double stepY = AppConstants.getScreenHeight() / (sizeY + 1);
-        double step = min(stepX, stepY);
+        int step = min((int)stepX, (int)stepY);
 
         AppConstants.getBitmapBank().setStep(step);
         AppConstants.setGridStep(step);
 
         AppConstants.getBitmapBank().scalePlayer(step / 2.0);
+        AppConstants.getGameEngine().getPlayer().setFlipped(false);
         AppConstants.getBitmapBank().initBlocks();
 
     }
@@ -37,11 +39,32 @@ public class LevelGenerator {
         if (data.size() != 0)
             return;
         // ALL LEVELS DATA SETS HERE ------------------------------------------------------------------------------------------------
-        data.add(new LevelData(1, 4, 4, new int[]{1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1}));
-        data.add(new LevelData(2, 8, 3, new int[]{1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1}));
-        data.add(new LevelData(3, 7, 2, new int[]{1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1}));
-        data.add(new LevelData(4, 9, 4, new int[]{1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1}));
-        data.add(new LevelData(5, 4, 4, new int[]{1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1}));
+        data.add(new LevelData(1, 0, 13, 7, 2, new int[]{1, 0, 0, 1, 0, 1, 0,
+                                                                                         0, 1, 1, 0, 1, 0, 1}));
+
+        data.add(new LevelData(2, 10, 24, 7, 4, new int[]
+                {0, 0, 0, 0, 1, 0, 0,
+                0, 0, 0, 1, 0, 1, 0,
+                0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 1, 1, 1, 1}));
+
+
+        data.add(new LevelData(3, 0, 35, 9, 4, new int[]{1, 0, 0, 1, 0, 1, 0, 0, 0,
+                                                                                         0, 0, 1, 0, 1, 0, 0, 0, 1,
+                                                                                         0, 1, 0, 0, 0, 1, 0, 1, 0,
+                                                                                         0, 0, 0, 0, 0, 1, 1, 0, 1}));
+
+        data.add(new LevelData(4, 0, 23, 8, 3, new int[]
+                {1, 1, 0, 0, 1, 0, 0, 1,
+                0, 0, 1, 1, 1, 0, 1, 1,
+                0, 1, 0, 0, 1, 1, 0, 1}));
+
+
+        data.add(new LevelData(5, 0, 21, 7, 4, new int[]
+                {1, 0, 0, 0, 0, 1, 0,
+                0, 1, 0, 1, 1, 0, 1,
+                0, 1, 1, 1, 1, 1, 0,
+                1, 1, 1, 1, 0, 0, 0}));
 
 
         // --------------------------------------------------------------------------------------------------------------------------
@@ -51,6 +74,11 @@ public class LevelGenerator {
         LevelData ld = data.get(level-1);
         sizeX = ld.getNumX();
         sizeY = ld.getNumY();
+        startIdx = ld.getStartIdx();
+        endIdx = ld.getEndIdx();
+
+        AppConstants.getGameEngine().setStartIdx(startIdx);
+        AppConstants.getGameEngine().setEndIdx(endIdx);
 
         return ld.getIndices();
     }
@@ -85,23 +113,30 @@ public class LevelGenerator {
 
         ArrayList<Block> blocks = new ArrayList<>();
 
-        Block block_start = new Block(BlockType.START, x[0], y[0]);
-        block_start.setIdx(0);
+
+        Block block_start = new Block(BlockType.START, x[startIdx], y[startIdx]);
+        block_start.setIdx(startIdx);
         blocks.add(0, block_start);
 
-        for (int i = 1; i < numBlocks-1; i++) {
-            Block block;
-            if (activeBlocks[i] == 1)
-                block = new Block(BlockType.DESTROYABLE_1, x[i], y[i]);
-            else
-                block = new Block(BlockType.EMPTY, x[i], y[i]);
-            blocks.add(i, block);
-            block.setIdx(i);
+        int j = 1;
+        for (int i = 0; i < numBlocks; i++) {
+            if (i != startIdx && i != endIdx) {
+                Block block;
+                if (activeBlocks[i] == 1)
+                    block = new Block(BlockType.DESTROYABLE_1, x[i], y[i]);
+                else
+                    block = new Block(BlockType.EMPTY, x[i], y[i]);
+                blocks.add(j, block);
+                block.setIdx(i);
+                j++;
+            }
         }
 
-        Block block_end = new Block(BlockType.END, x[numBlocks-1], y[numBlocks-1]);
+
+        Block block_end = new Block(BlockType.END, x[endIdx], y[endIdx]);
         blocks.add(numBlocks-1, block_end);
-        block_end.setIdx(numBlocksX-1);
+        block_end.setIdx(endIdx);
+
 
         return blocks;
     }

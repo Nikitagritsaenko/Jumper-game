@@ -9,15 +9,17 @@ class HamiltonianCycle
     private int[][] graph;
     private ArrayList<Block> blocks;
     private static int counter = 0;
+    private int start_position = 0;
 
     public void rebuildGraph() {
         blocks = AppConstants.getGameEngine().getBlocksAlive();
+
         V = blocks.size();
         graph = new int[V][V];
 
         for (int i = 0; i < V; i++) {
             for (int j = 0; j < V; j++) {
-                int dist = Block.dist(blocks, blocks.get(i), blocks.get(j));
+                int dist = Block.dist(AppConstants.getGameEngine().getBlocks(), blocks.get(i), blocks.get(j));
                 if (dist != Integer.MAX_VALUE)
                     graph[i][j] = 1;
                 else
@@ -25,6 +27,7 @@ class HamiltonianCycle
 
             }
         }
+
         graph[V - 1][0] = 1; // make cycle
     }
 
@@ -32,10 +35,10 @@ class HamiltonianCycle
         rebuildGraph();
     }
 
-    public int[] findHamiltonianPath(int start_position) {
+    public int[] findHamiltonianPath() {
+        rebuildGraph();
         System.out.println("START POS IS");
         System.out.println(start_position);
-        rebuildGraph();
         hamCycle(graph, start_position);
         return path;
     }
@@ -56,17 +59,18 @@ class HamiltonianCycle
     private boolean hamCycleUtil(int graph[][], int path[], int pos)
     {
         //System.out.println(counter++);
-        counter++;
         //if (counter > 10000) {
             //System.out.println("BREAK");
             //return false;
         //}
         if (pos == V)
         {
-            if (graph[path[pos - 1]][path[0]] == 1)
+            if (graph[path[pos - 1]][path[0]] == 1) {
                 return true;
-            else
+            }
+            else {
                 return false;
+            }
         }
 
         for (int v = 1; v < V; v++)

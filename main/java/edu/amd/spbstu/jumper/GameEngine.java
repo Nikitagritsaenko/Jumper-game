@@ -1,6 +1,8 @@
 package edu.amd.spbstu.jumper;
 
 import android.graphics.Canvas;
+import android.view.SurfaceHolder;
+
 import java.util.ArrayList;
 
 import static java.lang.Math.abs;
@@ -18,14 +20,18 @@ public class GameEngine {
     private static boolean isMovingLeft = false;
     private static boolean isMovingRight = false;
     private static boolean isSoundOn = true;
+    private boolean isWin = false;
     private double totalMoved = 0.0;
     private double jumpStep;
     private static boolean hasTouchedBlock = false;
     private static boolean isFallingSoundPlayed = false;
     private boolean isAutoPlay = false;
     private int[] path;
+    private int startIdx, endIdx;
     private int lastBlockIdx = 0;
+    private Block lastBlock;
     private int pos = 0;
+    private boolean isNewPath = false;
 
     public static void setMovingLeft(boolean movingLeft) {
         if (hasTouchedBlock) {
@@ -48,6 +54,7 @@ public class GameEngine {
     public void updateAndDrawBackgroundImage(Canvas canvas) {
         canvas.drawBitmap(AppConstants.getBitmapBank().getBackground(), backgroundImage.getX(), backgroundImage.getY(), null);
         canvas.drawBitmap(AppConstants.getBitmapBank().getRestart(), AppConstants.restartX, AppConstants.restartY, null);
+        canvas.drawBitmap(AppConstants.getBitmapBank().getExit(), AppConstants.exitX, AppConstants.exitY, null);
 
         if (gameState != GameStates.PAUSED)
             canvas.drawBitmap(AppConstants.getBitmapBank().getPause(), AppConstants.pauseX, AppConstants.pauseY, null);
@@ -62,6 +69,11 @@ public class GameEngine {
 
     public void updateBlocks(Canvas canvas) {
         int len = AppConstants.getBitmapBank().getBlocksNum();
+        if (AppConstants.getBitmapBank().getBlocks().length != len) {
+            AppConstants.getBitmapBank().setBlocks(null);
+            AppConstants.getBitmapBank().initBlocks();
+        }
+
         for (int i = 0; i < len; i++) {
             if (blocks.get(i).getDegree() > 0)
                 canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getX(), blocks.get(i).getY(), null);
@@ -99,10 +111,6 @@ public class GameEngine {
 
     public void updateCollision() {
         if (player.getY() > AppConstants.getScreenHeight()) {
-            if (!isFallingSoundPlayed) {
-                soundPlayer.playFallingSound();
-                isFallingSoundPlayed = true;
-            }
             restartGame();
             return;
         }
@@ -115,7 +123,6 @@ public class GameEngine {
         double y = player.getY();
 
         boolean isFallingDown = true;
-        boolean isPunched = false;
 
         for (Block b: blocks) {
             if (b.getDegree() == 0)
@@ -138,7 +145,6 @@ public class GameEngine {
                 soundPlayer.playFallingSound();
                 isFallingSoundPlayed = true;
                 gameState = GameStates.GAMEOVER;
-                isPunched = true;
             }
             else if (sx < -1  && s < AppConstants.getPlayerW() && abs(sy) < 0.8 * AppConstants.getBlockH()) {
                 isMovingLeft = false;
@@ -148,7 +154,6 @@ public class GameEngine {
                 soundPlayer.playFallingSound();
                 isFallingSoundPlayed = true;
                 gameState = GameStates.GAMEOVER;
-                isPunched = true;
             }
             else if (sy > 0  && s < 0.8 * AppConstants.getPlayerH()) {
                 player.setVelocity(-b.getInitVelocity());
@@ -156,6 +161,22 @@ public class GameEngine {
                 soundPlayer.playJumpSound();
                 hasTouchedBlock = true;
                 lastBlockIdx = b.getIdx();
+                lastBlock = b;
+                if (b.getType() == BlockType.END && getBlocksAlive().size() == 2) {
+                    isAutoPlay = false;
+                    player.setY(b.getY() - AppConstants.getPlayerH());
+                    isWin = true;
+                    soundPlayer.playWinSound();
+                    loadNextLevel();
+                }
+                if (isAutoPlay && b.getType() != BlockType.START) {
+                    int[] pth = hc.findHamiltonianPath();
+                    if (pth[1] != -1) {
+                        path = pth;
+                        isNewPath = true;
+
+                    }
+                }
                 b.decreaseDegree();
             }
             else if (sx <= 1 && sy < 0 && s < AppConstants.getPlayerH()) {
@@ -170,92 +191,116 @@ public class GameEngine {
     }
 
     private void makeJump(Block curr_block, Block next_block) {
-        if (abs(curr_block.getX() - next_block.getX()) > 1) {
-            int dist = Block.dist(blocks, curr_block, next_block);
+        //if (curr_block.getX() == next_block.getX()) {
+            int dist = Block.dist(currBlocks, curr_block, next_block);
 
             if (dist == 1)
                 player.moveRight();
-            else
+            else if (dist == -1)
                 player.moveLeft();
-            pos++;
-        }
-        else {
-            if (next_block.getDegree() == 0) {
-                pos++;
+        //}
+        //else {
+           // hc.findHamiltonianPath();
+            //if (next_block.getDegree() == 0) {
+                //pos++;
+            //}
+        //}
+
+    }
+
+    public Block getNearestNeighbour(Block curr_block) {
+        for (Block block : blocks) {
+            if (block.getType() == BlockType.START)
+                continue;
+            if (block.getDegree() > 0 && abs(block.getX() - curr_block.getX()) == AppConstants.getGridStep()
+                    && curr_block.getY() <= block.getY() + AppConstants.getGridStep()) {
+                return block;
             }
         }
-
-        if (pos == path.length) {
-            isAutoPlay = false;
-        }
+        return null;
     }
 
     public void updateAutoPlaying() {
         if (!isAutoPlay || isMovingRight || isMovingLeft || !hasTouchedBlock)
             return;
 
-        if (pos + 1 == path.length) {
-            System.out.println("AUTO PLAY HAS ENDED");
-            isAutoPlay = false;
+        if (!isNewPath)
             return;
-        }
-
-        if (path[pos + 1] == -1) {
-            System.out.println("AUTO PLAY HAS ENDED");
-            isAutoPlay = false;
-            return;
-        }
 
         int curr_idx = path[pos];
-        int next_idx = path[pos + 1];
         Block curr_block = currBlocks.get(curr_idx);
-        Block next_block = currBlocks.get(next_idx);
+        int next_idx = path[pos + 1];
+        Block next_block;
 
-        if (curr_block.getY() > next_block.getY() || abs(curr_block.getY() - next_block.getY()) < 1) {
+        if (next_idx == -1) {
+            isNewPath = false;
+            isAutoPlay = false;
+            return;
+        }
+        next_block = currBlocks.get(next_idx);
+
+        //if (curr_block.getY() > next_block.getY() || abs(curr_block.getY() - next_block.getY()) < 1) {
             // jump up
             if (player.getVelocity() >= 1) {
                 makeJump(curr_block, next_block);
+                isNewPath = false;
             }
-        }
-        else {
+        //}
+        /*else {
             // jump down
             double sy = curr_block.getY() - player.getY();
 
-            if (sy < AppConstants.getPlayerH()) {
+            if (sy < AppConstants.getPlayerH() && curr_block.getDegree() == 0) {
                 makeJump(curr_block, next_block);
             }
-        }
+        }*/
+    }
 
+    public void loadNextLevel() {
+        AppConstants.setCurrLevel(AppConstants.getCurrLevel() + 1);
+        restartGame();
+    }
+
+    public Block getBlockByIndex(int index) {
+        for (Block b: blocks) {
+            if (b.getIdx() == index)
+                return b;
+        }
+        return null;
     }
 
     public void restartGame() {
+
         blocks = lg.generateBlocks(AppConstants.getCurrLevel());
         jumpStep = AppConstants.getGridStep() / 3.0;
 
         backgroundImage = new BackgroundImage();
-        player.setX(blocks.get(0).getX());
-        player.setY(blocks.get(0).getY() - (int)(AppConstants.getBlockH() * 0.8) - AppConstants.getGridStep());
+
         // check flip to run again correctly
         if (player.isFlipped())  {
             AppConstants.getBitmapBank().flipPlayer();
+            player.setFlipped(false);
         }
-        player.setFlipped(false);
+
+        player.setX(blocks.get(0).getX());
+        player.setY(blocks.get(0).getY() - (int)(AppConstants.getBlockH() * 0.8) - AppConstants.getGridStep());
+
         player.setVelocity(0.0);
         isMovingLeft = false;
         isMovingRight = false;
         totalMoved = 0.0;
         hasTouchedBlock = false;
+        isFallingSoundPlayed = false;
         gameState = GameStates.PLAYING;
         lastBlockIdx = 0;
         pos = 0;
         isAutoPlay = false;
 
+        lastBlock = blocks.get(0);
+
         if (hc == null) {
             hc = new HamiltonianCycle();
         }
-
-        path = hc.findHamiltonianPath(lastBlockIdx); ////////
-        //isAutoPlay = true;
     }
 
     public void pauseGame() {
@@ -281,11 +326,24 @@ public class GameEngine {
     }
 
     public ArrayList<Block> getBlocksAlive() {
+        System.out.println("S E");
+        System.out.println(startIdx);
+        System.out.println(endIdx);
+        System.out.println(lastBlockIdx);
+
         ArrayList<Block> blocksAlive = new ArrayList<>();
+        blocksAlive.add(0, getBlockByIndex(lastBlockIdx));
+
         for (Block b: blocks) {
-            if (b.getDegree() > 0)
+            if (b.getIdx() == lastBlockIdx || b.getIdx() == endIdx)
+                continue;
+
+            if (b.getDegree() > 0 && b.getType() != BlockType.START) {
                 blocksAlive.add(b);
+            }
         }
+        blocksAlive.add(blocksAlive.size(), blocks.get(blocks.size()-1));
+
         currBlocks = blocksAlive;
         return blocksAlive;
     }
@@ -314,7 +372,41 @@ public class GameEngine {
         return lastBlockIdx;
     }
 
+    public void setStartIdx(int startIdx) {
+        this.startIdx = startIdx;
+        if (lastBlockIdx == 0)
+            lastBlockIdx = startIdx;
+    }
+
+    public void setEndIdx(int endIdx) {
+        this.endIdx = endIdx;
+    }
+
+    public int getStartIdx() {
+        return startIdx;
+    }
+
+    public int getEndIdx() {
+        return endIdx;
+    }
+
     public boolean isAutoPlay() {
         return isAutoPlay;
+    }
+
+    public HamiltonianCycle getHc() {
+        return hc;
+    }
+
+    public Block getLastBlock() {
+        return lastBlock;
+    }
+
+    public void setLastBlock(Block lastBlock) {
+        this.lastBlock = lastBlock;
+    }
+
+    public void setIsNewPath(boolean newPath) {
+        isNewPath = newPath;
     }
 }

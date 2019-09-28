@@ -17,8 +17,10 @@ public class AppConstants {
     private static int SCREEN_WIDTH;
     private static int SCREEN_HEIGHT;
 
+    private static int numLevels = 5;
+
     private static double gravity = 3.0;
-    private static double gridStep;
+    private static int gridStep;
     private static int playerH;
     private static int playerW;
     private static int blockW;
@@ -29,6 +31,7 @@ public class AppConstants {
     public static int pauseX, pauseY, pauseH, pauseW;
     public static int restartX, restartY, restartH, restartW;
     public static int soundX, soundY, soundH, soundW;
+    public static int exitX, exitY, exitH, exitW;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static void initialization(Context context) {
@@ -70,7 +73,7 @@ public class AppConstants {
         return SCREEN_HEIGHT;
     }
 
-    public static double getGridStep() {
+    public static int getGridStep() {
         return gridStep;
     }
 
@@ -88,6 +91,10 @@ public class AppConstants {
 
     public static int getBlockH() {
         return blockH;
+    }
+
+    public static int getNumLevels() {
+        return numLevels;
     }
 
     public static void setPlayerH(int playerH) {
@@ -110,11 +117,13 @@ public class AppConstants {
         return currLevel;
     }
 
-    public static void setGridStep(double gridStep) {
+    public static void setGridStep(int gridStep) {
         AppConstants.gridStep = gridStep;
     }
 
     public static void setCurrLevel(int currLevel) {
+        if (currLevel > numLevels)
+            return;
         AppConstants.currLevel = currLevel;
         AppConstants.getGameEngine().restartGame();
     }

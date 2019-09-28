@@ -41,6 +41,8 @@ public class Player {
         if (isFlipped) {
             AppConstants.getBitmapBank().flipPlayer();
             isFlipped = false;
+            System.out.println("Flip FALSE");
+
         }
         GameEngine.setMovingRight(true);
 
@@ -53,6 +55,7 @@ public class Player {
         if (!isFlipped) {
             AppConstants.getBitmapBank().flipPlayer();
             isFlipped = true;
+            System.out.println("Flip TRUE");
         }
         GameEngine.setMovingLeft(true);
     }

@@ -3,6 +3,7 @@ package edu.amd.spbstu.jumper;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -10,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,9 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     GameView gameView;
     GestureDetector gDetector;
     SoundPlayer soundPlayer;
+
+    private long backPressedTime;
+    private Toast backToast;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -114,8 +119,22 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
             }
         }
 
+        if (x - AppConstants.exitX  < AppConstants.exitW && x - AppConstants.exitX > 0 && abs(AppConstants.exitY - y) < AppConstants.exitH) {
+            Intent intent = new Intent(Level.this, GameLevels.class);
+            startActivity(intent);
+            finish();
+        }
+
         if (x < AppConstants.pauseW && y < AppConstants.pauseW) {
-            //////////
+            HamiltonianCycle hc = AppConstants.getGameEngine().getHc();
+            GameEngine ge = AppConstants.getGameEngine();
+
+
+            if (!ge.isAutoPlay()) {
+                ge.setPath(hc.findHamiltonianPath());
+                ge.setIsAutoPlay(true);
+                ge.setIsNewPath(true);
+            }
         }
 
 
@@ -159,5 +178,18 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
         super.onRestart();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        long timeToPressAgain = 2000;
+        if (backPressedTime + timeToPressAgain > System.currentTimeMillis()) {
+            Intent intent = new Intent(Level.this, GameLevels.class);
+            startActivity(intent);
+            finish();
+        } else {
+            backToast = Toast.makeText(getBaseContext(), "Press again to go menu", Toast.LENGTH_SHORT);
+            backToast.setDuration(Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+        backPressedTime = System.currentTimeMillis();
+    }
 }

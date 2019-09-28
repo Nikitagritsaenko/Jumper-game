@@ -19,6 +19,7 @@ public class SoundPlayer {
     private static int clickSound;
     private static int fallingSound;
     private static int punchSound;
+    private static int winSound;
 
     private boolean isMenuSoundPlaying;
 
@@ -46,6 +47,7 @@ public class SoundPlayer {
         clickSound = soundPool.load(context, R.raw.click, 1);
         fallingSound = soundPool.load(context, R.raw.falling, 1);
         punchSound = soundPool.load(context, R.raw.punch, 1);
+        winSound = soundPool.load(context, R.raw.level_winner, 1);
 
         mediaPlayer = MediaPlayer.create(context, R.raw.menu_music);
 
@@ -67,6 +69,10 @@ public class SoundPlayer {
 
     public void playPunchSound() {
         soundPool.play(punchSound, volume, volume, 1, 0, 1.0f);
+    }
+
+    public void playWinSound() {
+        soundPool.play(winSound, volume, volume, 1, 0, 1.0f);
     }
 
 
