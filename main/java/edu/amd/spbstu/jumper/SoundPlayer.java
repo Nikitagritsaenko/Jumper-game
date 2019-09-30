@@ -72,7 +72,7 @@ public class SoundPlayer {
     }
 
     public void playWinSound() {
-        soundPool.play(winSound, volume, volume, 1, 0, 1.0f);
+        soundPool.play(winSound, volume * 0.75f, volume * 0.75f, 1, 0, 1.0f);
     }
 
 

@@ -85,9 +85,19 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     }
 
     @Override
-    public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2, float arg3) {
+    public boolean onScroll(MotionEvent start, MotionEvent finish, float arg2, float arg3) {
+        if (AppConstants.getGameEngine().isAutoPlay()) {
+            return false;
+        }
+        Player player = AppConstants.getGameEngine().getPlayer();
+        if (start.getRawX() < finish.getRawX()) {
+            player.moveRight();
+        } else {
+            player.moveLeft();
+        }
         return false;
     }
+
     @Override
     public void onShowPress(MotionEvent arg0) {
     }

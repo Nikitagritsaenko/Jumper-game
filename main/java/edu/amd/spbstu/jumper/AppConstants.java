@@ -17,9 +17,9 @@ public class AppConstants {
     private static int SCREEN_WIDTH;
     private static int SCREEN_HEIGHT;
 
-    private static int numLevels = 5;
+    private static int numLevels = 14;
 
-    private static double gravity = 3.0;
+    private static double gravity = 3.5;
     private static int gridStep;
     private static int playerH;
     private static int playerW;

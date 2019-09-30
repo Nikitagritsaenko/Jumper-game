@@ -14,6 +14,7 @@ public class BitmapBank {
     private Bitmap background;
     private Bitmap player;
     private Bitmap[] blocks;
+    private Boolean[] isBlockMinimized;
     private Bitmap pause;
     private Bitmap restart;
     private Bitmap play;
@@ -27,6 +28,34 @@ public class BitmapBank {
     private int numBlocksY;
 
     private int numBlocks;
+
+    private double squeeze = 1.25;
+
+    public void maximizeAllBlocks() {
+        for (int i = 0; i < blocks.length; i++) {
+            maximizeBlock(i);
+        }
+    }
+    public void maximizeBlock(int i) {
+        if (!isBlockMinimized[i])
+            return;
+        blocks[i] = Bitmap.createScaledBitmap(blocks[i], AppConstants.getBlockW(), AppConstants.getBlockH(), false);
+        Block b = AppConstants.getGameEngine().getBlocks().get(i);
+        b.setCoordX(b.getCoordX() - (int)(blocks[i].getWidth()    * (1.0 - 1 / squeeze) / 2));
+
+        isBlockMinimized[i] = false;
+    }
+
+    public void minimizeBlock(int i) {
+        if (isBlockMinimized[i])
+            return;
+
+        Block b = AppConstants.getGameEngine().getBlocks().get(i);
+        b.setCoordX(b.getCoordX() + (int)(blocks[i].getWidth()    * (1.0 - 1 / squeeze) / 2));
+
+        blocks[i] = Bitmap.createScaledBitmap(blocks[i], (int)(blocks[i].getWidth() / squeeze), (int)(blocks[i].getHeight() / squeeze), false);
+        isBlockMinimized[i] = true;
+    }
 
     private Bitmap squeezeImage(Bitmap bitmap, int squeeze) {
         int h = bitmap.getHeight();
@@ -55,6 +84,10 @@ public class BitmapBank {
 
             int startIdx = AppConstants.getGameEngine().getStartIdx();
             int endIdx   = AppConstants.getGameEngine().getEndIdx();
+
+            isBlockMinimized = new Boolean[numBlocks];
+            for (int i = 0; i < numBlocks; i++)
+                isBlockMinimized[i] = false;
 
             blocks[0] = b_special;
             blocks[0] = setImageSize(blocks[0], player.getWidth(), player.getHeight());

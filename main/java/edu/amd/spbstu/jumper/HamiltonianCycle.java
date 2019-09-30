@@ -29,6 +29,18 @@ class HamiltonianCycle
         }
 
         graph[V - 1][0] = 1; // make cycle
+
+        for (int i = 0; i < V; i++) {
+            System.out.print(i);
+            System.out.print(") ");
+            for (int j = 0; j < V; j++) {
+                if (graph[i][j] == 1) {
+                    System.out.print(j);
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
     }
 
     public HamiltonianCycle() {
@@ -37,8 +49,6 @@ class HamiltonianCycle
 
     public int[] findHamiltonianPath() {
         rebuildGraph();
-        System.out.println("START POS IS");
-        System.out.println(start_position);
         hamCycle(graph, start_position);
         return path;
     }

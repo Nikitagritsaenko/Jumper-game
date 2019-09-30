@@ -10,8 +10,9 @@ import static java.lang.StrictMath.abs;
 public class Block {
     private BlockType type;
     private int degree;
-    private int x, y;
+    private int x, y, coordX, coordY;
     private int idx;
+    private int pos;
     private double initVelocity;
 
     public Block(BlockType type, int x, int y) {
@@ -28,6 +29,8 @@ public class Block {
 
         this.x = x;
         this.y = y;
+        this.coordX = x;
+        this.coordY = y;
         this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStep() * 1.3);
     }
 
@@ -35,6 +38,11 @@ public class Block {
         if (b.getType() == BlockType.START) {
             return Integer.MAX_VALUE;
         }
+
+        if (a.getType() == BlockType.END) {
+            return Integer.MAX_VALUE;
+        }
+
 
         if (a.getX() == b.getX() && a.getY() == b.getY()) {
             return Integer.MAX_VALUE;
@@ -135,6 +143,8 @@ public class Block {
 
     public void decreaseDegree() { degree--; }
 
+    public void increaseDegree() { degree++; }
+
     public int getX() {
         return x;
     }
@@ -147,12 +157,44 @@ public class Block {
         return idx;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getCoordX() {
+        return coordX;
+    }
+
+    public int getCoordY() {
+        return coordY;
+    }
+
+    public void setCoordX(int coordX) {
+        this.coordX = coordX;
+    }
+
+    public void setCoordY(int coordY) {
+        this.coordY = coordY;
+    }
+
     public void setIdx(int idx) {
         this.idx = idx;
     }
 
     public double getInitVelocity() {
         return initVelocity;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
     }
 }
 

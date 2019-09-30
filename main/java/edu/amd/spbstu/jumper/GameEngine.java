@@ -1,5 +1,6 @@
 package edu.amd.spbstu.jumper;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
@@ -76,7 +77,7 @@ public class GameEngine {
 
         for (int i = 0; i < len; i++) {
             if (blocks.get(i).getDegree() > 0)
-                canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getX(), blocks.get(i).getY(), null);
+                canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), null);
         }
     }
 
@@ -160,8 +161,9 @@ public class GameEngine {
                 player.setY(player.getY() + player.getVelocity());
                 soundPlayer.playJumpSound();
                 hasTouchedBlock = true;
-                lastBlockIdx = b.getIdx();
                 lastBlock = b;
+                int lastBlockIdxTmp = lastBlockIdx;
+                lastBlockIdx = b.getIdx();
                 if (b.getType() == BlockType.END && getBlocksAlive().size() == 2) {
                     isAutoPlay = false;
                     player.setY(b.getY() - AppConstants.getPlayerH());
@@ -174,10 +176,35 @@ public class GameEngine {
                     if (pth[1] != -1) {
                         path = pth;
                         isNewPath = true;
-
+                        pos = 0;
+                    }
+                    else {
+                        isAutoPlay = false;
+                        isNewPath = false;
                     }
                 }
-                b.decreaseDegree();
+                if (b.getType() != BlockType.DESTROYABLE_2) {
+                    b.decreaseDegree();
+                }
+                else {
+                    if (lastBlockIdxTmp == b.getIdx()) {
+                        int pos = b.getPos();
+                        Bitmap bitmap = AppConstants.getBitmapBank().getBlocks()[pos];
+
+                        if (bitmap.getWidth() < AppConstants.getBlockW()) {
+                            AppConstants.getBitmapBank().maximizeBlock(b.getPos());
+                            b.increaseDegree();
+                        }
+                        else {
+                            AppConstants.getBitmapBank().minimizeBlock(b.getPos());
+                            b.decreaseDegree();
+                        }
+                    }
+                    else {
+                        AppConstants.getBitmapBank().minimizeBlock(b.getPos());
+                        b.decreaseDegree();
+                    }
+                }
             }
             else if (sx <= 1 && sy < 0 && s < AppConstants.getPlayerH()) {
                 player.setVelocity(0);
@@ -227,6 +254,12 @@ public class GameEngine {
         if (!isNewPath)
             return;
 
+        if (path[1] == -1) {
+            isAutoPlay = false;
+            isNewPath = false;
+            return;
+        }
+
         int curr_idx = path[pos];
         Block curr_block = currBlocks.get(curr_idx);
         int next_idx = path[pos + 1];
@@ -239,21 +272,35 @@ public class GameEngine {
         }
         next_block = currBlocks.get(next_idx);
 
-        //if (curr_block.getY() > next_block.getY() || abs(curr_block.getY() - next_block.getY()) < 1) {
+        if (curr_block.getY() > next_block.getY()) {
             // jump up
-            if (player.getVelocity() >= 1) {
+            if (player.getVelocity() < 0 && abs(player.getVelocity()) < 30) {
                 makeJump(curr_block, next_block);
+                pos++;
                 isNewPath = false;
             }
-        //}
-        /*else {
+        }
+        else {
             // jump down
-            double sy = curr_block.getY() - player.getY();
-
-            if (sy < AppConstants.getPlayerH() && curr_block.getDegree() == 0) {
-                makeJump(curr_block, next_block);
+            if (curr_block.getY() == next_block.getY()) {
+                double sy = curr_block.getY() - player.getY();
+                double sx = curr_block.getX() - player.getX();
+                double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
+                if (player.getVelocity() > curr_block.getInitVelocity() * 0.5) {
+                    makeJump(curr_block, next_block);
+                    pos++;
+                    isNewPath = false;
+                }
             }
-        }*/
+            else {
+                if (player.getVelocity() > curr_block.getInitVelocity() - 10) {
+                    makeJump(curr_block, next_block);
+                    pos++;
+                    isNewPath = false;
+                }
+            }
+
+        }
     }
 
     public void loadNextLevel() {
@@ -272,7 +319,7 @@ public class GameEngine {
     public void restartGame() {
 
         blocks = lg.generateBlocks(AppConstants.getCurrLevel());
-        jumpStep = AppConstants.getGridStep() / 3.0;
+        jumpStep = AppConstants.getGridStep() / 5.0;
 
         backgroundImage = new BackgroundImage();
 
@@ -326,13 +373,19 @@ public class GameEngine {
     }
 
     public ArrayList<Block> getBlocksAlive() {
-        System.out.println("S E");
-        System.out.println(startIdx);
-        System.out.println(endIdx);
-        System.out.println(lastBlockIdx);
 
         ArrayList<Block> blocksAlive = new ArrayList<>();
-        blocksAlive.add(0, getBlockByIndex(lastBlockIdx));
+
+        if (lastBlockIdx == 0)
+            blocksAlive.add(0, blocks.get(0));
+        else {
+            Block block = getBlockByIndex(lastBlockIdx);
+            blocksAlive.add(0, block);
+
+            if (block.getType() == BlockType.DESTROYABLE_2 && block.getDegree() == 2) {
+                blocksAlive.add(block);
+            }
+        }
 
         for (Block b: blocks) {
             if (b.getIdx() == lastBlockIdx || b.getIdx() == endIdx)
@@ -340,6 +393,8 @@ public class GameEngine {
 
             if (b.getDegree() > 0 && b.getType() != BlockType.START) {
                 blocksAlive.add(b);
+                if (b.getDegree() == 2)
+                    blocksAlive.add(b);
             }
         }
         blocksAlive.add(blocksAlive.size(), blocks.get(blocks.size()-1));
