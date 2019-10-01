@@ -43,7 +43,6 @@ public class Block {
             return Integer.MAX_VALUE;
         }
 
-
         if (a.getX() == b.getX() && a.getY() == b.getY()) {
             return Integer.MAX_VALUE;
         }
@@ -60,6 +59,9 @@ public class Block {
                 // ? check this blocks
                 // ?
                 // b
+                if (a.getDegree() == 2) {
+                    return Integer.MAX_VALUE;
+                }
                 if (a.getType() == BlockType.START) {
                     return Integer.MAX_VALUE;
                 }

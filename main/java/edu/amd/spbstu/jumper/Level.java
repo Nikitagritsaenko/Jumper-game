@@ -143,7 +143,6 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
             if (!ge.isAutoPlay()) {
                 ge.setPath(hc.findHamiltonianPath());
                 ge.setIsAutoPlay(true);
-                ge.setIsNewPath(true);
             }
         }
 

@@ -32,7 +32,6 @@ public class GameEngine {
     private int lastBlockIdx = 0;
     private Block lastBlock;
     private int pos = 0;
-    private boolean isNewPath = false;
 
     public static void setMovingLeft(boolean movingLeft) {
         if (hasTouchedBlock) {
@@ -111,6 +110,12 @@ public class GameEngine {
     }
 
     public void updateCollision() {
+        /*if (player.getY() < 0) {
+            player.setY(0);
+            player.setVelocity(0);
+            return;
+        }*/
+
         if (player.getY() > AppConstants.getScreenHeight()) {
             restartGame();
             return;
@@ -171,7 +176,7 @@ public class GameEngine {
                     soundPlayer.playWinSound();
                     loadNextLevel();
                 }
-                if (isAutoPlay && b.getType() != BlockType.START) {
+                /*if (isAutoPlay && b.getType() != BlockType.START) {
                     int[] pth = hc.findHamiltonianPath();
                     if (pth[1] != -1) {
                         path = pth;
@@ -182,7 +187,7 @@ public class GameEngine {
                         isAutoPlay = false;
                         isNewPath = false;
                     }
-                }
+                }*/
                 if (b.getType() != BlockType.DESTROYABLE_2) {
                     b.decreaseDegree();
                 }
@@ -218,55 +223,43 @@ public class GameEngine {
     }
 
     private void makeJump(Block curr_block, Block next_block) {
-        //if (curr_block.getX() == next_block.getX()) {
-            int dist = Block.dist(currBlocks, curr_block, next_block);
-
-            if (dist == 1)
-                player.moveRight();
-            else if (dist == -1)
-                player.moveLeft();
-        //}
-        //else {
-           // hc.findHamiltonianPath();
-            //if (next_block.getDegree() == 0) {
-                //pos++;
-            //}
-        //}
-
-    }
-
-    public Block getNearestNeighbour(Block curr_block) {
-        for (Block block : blocks) {
-            if (block.getType() == BlockType.START)
-                continue;
-            if (block.getDegree() > 0 && abs(block.getX() - curr_block.getX()) == AppConstants.getGridStep()
-                    && curr_block.getY() <= block.getY() + AppConstants.getGridStep()) {
-                return block;
-            }
+        int dist = Block.dist(currBlocks, curr_block, next_block);
+        if (curr_block.getX() == next_block.getX()) {
+            return;
         }
-        return null;
+
+        if (dist == 1)
+            player.moveRight();
+        else if (dist == -1)
+            player.moveLeft();
     }
 
     public void updateAutoPlaying() {
         if (!isAutoPlay || isMovingRight || isMovingLeft || !hasTouchedBlock)
             return;
 
-        if (!isNewPath)
-            return;
-
-        if (path[1] == -1) {
+        if (pos + 1 >= path.length) {
             isAutoPlay = false;
-            isNewPath = false;
             return;
         }
+
+        if (path[pos] == -1) {
+            isAutoPlay = false;
+            return;
+        }
+
+
 
         int curr_idx = path[pos];
         Block curr_block = currBlocks.get(curr_idx);
         int next_idx = path[pos + 1];
         Block next_block;
 
+        if (lastBlockIdx != curr_block.getIdx()) {
+            return;
+        }
+
         if (next_idx == -1) {
-            isNewPath = false;
             isAutoPlay = false;
             return;
         }
@@ -274,10 +267,9 @@ public class GameEngine {
 
         if (curr_block.getY() > next_block.getY()) {
             // jump up
-            if (player.getVelocity() < 0 && abs(player.getVelocity()) < 30) {
+            if (player.getVelocity() < 0 && abs(player.getVelocity()) < 25) {
                 makeJump(curr_block, next_block);
                 pos++;
-                isNewPath = false;
             }
         }
         else {
@@ -286,17 +278,15 @@ public class GameEngine {
                 double sy = curr_block.getY() - player.getY();
                 double sx = curr_block.getX() - player.getX();
                 double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
-                if (player.getVelocity() > curr_block.getInitVelocity() * 0.5) {
+                if (player.getVelocity() > curr_block.getInitVelocity() * 0.4) {
                     makeJump(curr_block, next_block);
                     pos++;
-                    isNewPath = false;
                 }
             }
             else {
                 if (player.getVelocity() > curr_block.getInitVelocity() - 10) {
                     makeJump(curr_block, next_block);
                     pos++;
-                    isNewPath = false;
                 }
             }
 
@@ -461,7 +451,4 @@ public class GameEngine {
         this.lastBlock = lastBlock;
     }
 
-    public void setIsNewPath(boolean newPath) {
-        isNewPath = newPath;
-    }
 }
