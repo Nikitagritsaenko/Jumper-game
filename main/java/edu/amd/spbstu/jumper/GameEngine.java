@@ -32,6 +32,7 @@ public class GameEngine {
     private int lastBlockIdx = 0;
     private Block lastBlock;
     private int pos = 0;
+    private double jumpNum = 5.0;
 
     public static void setMovingLeft(boolean movingLeft) {
         if (hasTouchedBlock) {
@@ -81,6 +82,12 @@ public class GameEngine {
     }
 
     public void updateAndDrawPlayer(Canvas canvas) {
+        if (isAutoPlay)
+            jumpNum = 2.0;
+        else
+            jumpNum = 5.0;
+        jumpStep = AppConstants.getGridStep() / jumpNum;
+
         if (gameState != GameStates.PAUSED) {
             player.setVelocity(player.getVelocity() + AppConstants.getGravity());
             player.setY(player.getY() + player.getVelocity());
@@ -110,11 +117,11 @@ public class GameEngine {
     }
 
     public void updateCollision() {
-        /*if (player.getY() < 0) {
+        if (player.getY() < 0) {
             player.setY(0);
             player.setVelocity(0);
             return;
-        }*/
+        }
 
         if (player.getY() > AppConstants.getScreenHeight()) {
             restartGame();
@@ -143,7 +150,7 @@ public class GameEngine {
                 isFallingDown = false;
             }
 
-            if (sx > 1 && s < AppConstants.getPlayerW() && abs(sy) < 0.8 * AppConstants.getBlockH()) {
+            if (sx > 1 && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
                 isMovingRight = false;
                 totalMoved = 0.0;
                 player.setX(b.getX() - AppConstants.getPlayerW());
@@ -152,7 +159,7 @@ public class GameEngine {
                 isFallingSoundPlayed = true;
                 gameState = GameStates.GAMEOVER;
             }
-            else if (sx < -1  && s < AppConstants.getPlayerW() && abs(sy) < 0.8 * AppConstants.getBlockH()) {
+            else if (sx < -1  && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
                 isMovingLeft = false;
                 totalMoved = 0.0;
                 player.setX(b.getX() + AppConstants.getPlayerW());
@@ -161,7 +168,7 @@ public class GameEngine {
                 isFallingSoundPlayed = true;
                 gameState = GameStates.GAMEOVER;
             }
-            else if (sy > 0  && s < 0.8 * AppConstants.getPlayerH()) {
+            else if (sy >= 0  && s < 0.9 * AppConstants.getPlayerH()) {
                 player.setVelocity(-b.getInitVelocity());
                 player.setY(player.getY() + player.getVelocity());
                 soundPlayer.playJumpSound();
@@ -176,18 +183,6 @@ public class GameEngine {
                     soundPlayer.playWinSound();
                     loadNextLevel();
                 }
-                /*if (isAutoPlay && b.getType() != BlockType.START) {
-                    int[] pth = hc.findHamiltonianPath();
-                    if (pth[1] != -1) {
-                        path = pth;
-                        isNewPath = true;
-                        pos = 0;
-                    }
-                    else {
-                        isAutoPlay = false;
-                        isNewPath = false;
-                    }
-                }*/
                 if (b.getType() != BlockType.DESTROYABLE_2) {
                     b.decreaseDegree();
                 }
@@ -211,7 +206,7 @@ public class GameEngine {
                     }
                 }
             }
-            else if (sx <= 1 && sy < 0 && s < AppConstants.getPlayerH()) {
+            else if (sx <= 1 && sy < 0 && s < 0.7 * AppConstants.getPlayerH()) {
                 player.setVelocity(0);
                 player.setY(b.getY() + AppConstants.getBlockH());
             }
@@ -248,8 +243,6 @@ public class GameEngine {
             return;
         }
 
-
-
         int curr_idx = path[pos];
         Block curr_block = currBlocks.get(curr_idx);
         int next_idx = path[pos + 1];
@@ -267,17 +260,27 @@ public class GameEngine {
 
         if (curr_block.getY() > next_block.getY()) {
             // jump up
-            if (player.getVelocity() < 0 && abs(player.getVelocity()) < 25) {
+            System.out.println("J UP");
+            if (player.getVelocity() < 0 && player.getY() + AppConstants.getPlayerH() <= next_block.getY()) {
                 makeJump(curr_block, next_block);
                 pos++;
             }
         }
         else {
             // jump down
-            if (curr_block.getY() == next_block.getY()) {
+            System.out.println("J DOWN");
+
+            if (player.getVelocity() > 0 && player.getY() + 2 * AppConstants.getPlayerH() >= curr_block.getY()) {
+                makeJump(curr_block, next_block);
+                pos++;
+            }
+
+
+            /*if (curr_block.getY() == next_block.getY()) {
                 double sy = curr_block.getY() - player.getY();
                 double sx = curr_block.getX() - player.getX();
                 double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
+
                 if (player.getVelocity() > curr_block.getInitVelocity() * 0.4) {
                     makeJump(curr_block, next_block);
                     pos++;
@@ -288,7 +291,7 @@ public class GameEngine {
                     makeJump(curr_block, next_block);
                     pos++;
                 }
-            }
+            }*/
 
         }
     }
@@ -309,7 +312,7 @@ public class GameEngine {
     public void restartGame() {
 
         blocks = lg.generateBlocks(AppConstants.getCurrLevel());
-        jumpStep = AppConstants.getGridStep() / 5.0;
+        jumpStep = AppConstants.getGridStep() / jumpNum;
 
         backgroundImage = new BackgroundImage();
 
@@ -332,6 +335,7 @@ public class GameEngine {
         lastBlockIdx = 0;
         pos = 0;
         isAutoPlay = false;
+        isWin = false;
 
         lastBlock = blocks.get(0);
 

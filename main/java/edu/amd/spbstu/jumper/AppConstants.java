@@ -1,13 +1,20 @@
 package edu.amd.spbstu.jumper;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Point;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
+
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 
 public class AppConstants {
@@ -19,13 +26,12 @@ public class AppConstants {
 
     private static int numLevels = 20;
 
-    private static double gravity = 3.5;
+    private static double gravity;
     private static int gridStep;
     private static int playerH;
     private static int playerW;
     private static int blockW;
     private static int blockH;
-
     private static int currLevel;
 
     public static int pauseX, pauseY, pauseH, pauseW;
@@ -35,7 +41,8 @@ public class AppConstants {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static void initialization(Context context) {
-        setScreenSize(context);
+        gravity = SCREEN_HEIGHT / 350;
+
         if (soundPlayer == null) {
             soundPlayer = new SoundPlayer(context);
         }
@@ -128,15 +135,11 @@ public class AppConstants {
         AppConstants.getGameEngine().restartGame();
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private static void setScreenSize(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        DisplayMetrics metrics = new DisplayMetrics();
-        display.getRealMetrics(metrics);
-        SCREEN_HEIGHT = metrics.widthPixels; // no mistake here
-        SCREEN_WIDTH = metrics.heightPixels;
+    public static void setScreenWidth(int screenWidth) {
+        SCREEN_WIDTH = screenWidth;
     }
 
+    public static void setScreenHeight(int screenHeight) {
+        SCREEN_HEIGHT = screenHeight;
+    }
 }

@@ -3,12 +3,16 @@ package edu.amd.spbstu.jumper;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -19,9 +23,11 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+
 public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, View.OnTouchListener {
     private long backPressedTime;
-    private Toast backToast;
+    private static Toast backToast;
 
     public static final int	VIEW_INTRO		= 0;
     public static final int	VIEW_GAME       = 1;
@@ -34,7 +40,11 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
     int						m_screenW;
     int						m_screenH;
 
-
+    private static void cancelToast() {
+        if (backToast != null) {
+            backToast.cancel();
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -79,6 +89,19 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
         m_app = new AppIntro(this, language);
         // Create view
         setView(VIEW_INTRO);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getRealMetrics(metrics);
+
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == ORIENTATION_LANDSCAPE) {
+            AppConstants.setScreenWidth(metrics.widthPixels);
+            AppConstants.setScreenHeight(metrics.heightPixels);
+        } else {
+            AppConstants.setScreenWidth(metrics.heightPixels);
+            AppConstants.setScreenHeight(metrics.widthPixels);
+        }
+
     }
 
     //system back button
@@ -90,7 +113,8 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
             super.onBackPressed();
             return;
         } else {
-            backToast = Toast.makeText(getBaseContext(), "Press again to exit", Toast.LENGTH_SHORT);
+            Context context = getBaseContext();
+            backToast = Toast.makeText(context, context.getString(R.string.on_back_button_pressed), Toast.LENGTH_SHORT);
             backToast.setDuration(Toast.LENGTH_SHORT);
             backToast.show();
         }
@@ -109,11 +133,13 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
         if (m_viewCur == VIEW_INTRO)
         {
             m_viewIntro = new ViewIntro(this);
+            cancelToast();
             setContentView(m_viewIntro);
         }
         if (m_viewCur == VIEW_GAME)
         {
             try {
+                cancelToast();
                 Intent intent = new Intent(MainActivity.this, GameMenu.class);
                 startActivity(intent);
                 finish();

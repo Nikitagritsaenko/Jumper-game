@@ -3,9 +3,11 @@ package edu.amd.spbstu.jumper;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +25,15 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     SoundPlayer soundPlayer;
 
     private long backPressedTime;
-    private Toast backToast;
+    private long autoplayPressedTime;
+    private static Toast backToast;
+    private int clickCount = 0;
+
+    private static void cancelToast() {
+        if (backToast != null) {
+            backToast.cancel();
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -132,22 +142,45 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
         if (x - AppConstants.exitX  < AppConstants.exitW && x - AppConstants.exitX > 0 && abs(AppConstants.exitY - y) < AppConstants.exitH) {
             Intent intent = new Intent(Level.this, GameLevels.class);
             startActivity(intent);
+            cancelToast();
             finish();
         }
 
-        if (x < AppConstants.pauseW && y < AppConstants.pauseW) {
-            HamiltonianCycle hc = AppConstants.getGameEngine().getHc();
-            GameEngine ge = AppConstants.getGameEngine();
+        if (x < AppConstants.pauseW * 2 && y < AppConstants.pauseW * 2) {
 
+            long time = System.currentTimeMillis();
+            long timeToPressAgain = 1000;
+            if (time - autoplayPressedTime < timeToPressAgain)
+                clickCount++;
+            else
+                if (clickCount == 0)
+                    clickCount = 1;
+                else
+                    clickCount = 0;
 
-            if (!ge.isAutoPlay()) {
-                ge.setPath(hc.findHamiltonianPath());
-                ge.setIsAutoPlay(true);
+            System.out.println(clickCount);
+
+            autoplayPressedTime = time;
+
+            if  (clickCount == 3) {
+                runAutoPlay();
+                clickCount = 0;
             }
         }
 
 
         return false;
+    }
+
+    public void runAutoPlay() {
+        HamiltonianCycle hc = AppConstants.getGameEngine().getHc();
+        GameEngine ge = AppConstants.getGameEngine();
+
+
+        if (!ge.isAutoPlay()) {
+            ge.setPath(hc.findHamiltonianPath());
+            ge.setIsAutoPlay(true);
+        }
     }
 
     public void disableSystemButtons() {
@@ -191,11 +224,13 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     public void onBackPressed() {
         long timeToPressAgain = 2000;
         if (backPressedTime + timeToPressAgain > System.currentTimeMillis()) {
+            cancelToast();
             Intent intent = new Intent(Level.this, GameLevels.class);
             startActivity(intent);
             finish();
         } else {
-            backToast = Toast.makeText(getBaseContext(), "Press again to go menu", Toast.LENGTH_SHORT);
+            Context context = getBaseContext();
+            backToast = Toast.makeText(context, context.getString(R.string.on_back_button_pressed_in_game), Toast.LENGTH_SHORT);
             backToast.setDuration(Toast.LENGTH_SHORT);
             backToast.show();
         }

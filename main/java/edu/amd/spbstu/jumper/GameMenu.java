@@ -3,6 +3,7 @@ package edu.amd.spbstu.jumper;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +18,13 @@ import java.io.InputStream;
 
 public class GameMenu extends AppCompatActivity {
     private long backPressedTime;
-    private Toast backToast;
+    private static Toast backToast;
+
+    private static void cancelToast() {
+        if (backToast != null) {
+            backToast.cancel();
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,7 @@ public class GameMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    cancelToast();
                     Intent intent = new Intent(GameMenu.this, GameLevels.class);
                     startActivity(intent);
                     finish();
@@ -55,7 +63,8 @@ public class GameMenu extends AppCompatActivity {
             super.onBackPressed();
             return;
         } else {
-            backToast = Toast.makeText(getBaseContext(), "Press again to exit", Toast.LENGTH_SHORT);
+            Context context = getBaseContext();
+            backToast = Toast.makeText(context, context.getString(R.string.on_back_button_pressed), Toast.LENGTH_SHORT);
             backToast.setDuration(Toast.LENGTH_SHORT);
             backToast.show();
         }

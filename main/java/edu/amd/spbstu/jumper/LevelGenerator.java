@@ -22,8 +22,8 @@ public class LevelGenerator {
         AppConstants.getBitmapBank().setNumBlocksY(sizeY);
         AppConstants.getBitmapBank().setNumBlocks(sizeY * sizeX);
 
-        double stepX = AppConstants.getScreenWidth() / (sizeX + 1);
-        double stepY = AppConstants.getScreenHeight() / (sizeY + 1);
+        double stepX = AppConstants.getScreenWidth() / (sizeX + 1.5);
+        double stepY = AppConstants.getScreenHeight() / (sizeY + 1.5);
         int step = min((int)stepX, (int)stepY);
 
         AppConstants.getBitmapBank().setStep(step);
@@ -108,12 +108,13 @@ public class LevelGenerator {
                                 0, 0, 0, 0, 0,
                                 0, 1, 2, 2, 1,}));
 
-        data.add(new LevelData(11, 13, 26, 9, 5, new int[]
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 1, 1, 1, 0, 0, 0, 0,
-                        0, 1, 0, 0, 0, 0, 0, 0, 1,
-                        0, 1, 0, 2, 2, 0, 2, 2, 0,
-                        0, 1, 1, 0, 0, 1, 0, 0, 0}));
+        data.add(new LevelData(11, 13, 35, 9, 6, new int[]
+                        {       0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 1, 1, 1, 1, 0, 0, 0, 0,
+                                0, 1, 0, 0, 0, 0, 0, 0, 0,
+                                0, 1, 0, 0, 0, 0, 0, 0, 1,
+                                0, 1, 0, 2, 2, 0, 2, 2, 0,
+                                0, 1, 1, 0, 0, 1, 0, 0, 0}));
 
         data.add(new LevelData(12, 14, 28, 7, 5, new int[]
                          {0, 0, 0, 0, 0, 0, 0,
@@ -139,7 +140,7 @@ public class LevelGenerator {
                                         1, 0, 0, 0, 0, 0, 1, 1, 0,
                                         0, 1, 0, 0, 0, 0, 0, 1, 0,
                                         1, 0, 0, 2, 0, 0, 1, 1, 0,
-                                        0, 2, 2, 0, 2, 1, 1, 2, 2,}));
+                                        0, 1, 1, 0, 2, 1, 1, 2, 2,}));
 
 
         data.add(new LevelData(15, 34, 54, 10, 6, new int[]
@@ -150,7 +151,7 @@ public class LevelGenerator {
                                 1, 0, 1, 0, 0, 0, 0, 0, 1, 1,
                                 0, 1, 0, 0, 1, 0, 0, 0, 0, 0,
                                 1, 0, 0, 1, 0, 0, 0, 0, 2, 2,
-                                0, 2, 2, 0, 1, 1, 1, 1, 0, 0,}));
+                                0, 1, 1, 0, 1, 1, 1, 1, 0, 0,}));
 
         data.add(new LevelData(16, 40, 43, 10, 5, new int[]
                 {       //0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -166,8 +167,8 @@ public class LevelGenerator {
                         1, 0, 2, 0, 0, 0, 0, 0, 1, 0,
                         0, 2, 0, 0, 0, 0, 0, 1, 0, 2,
                         1, 0, 1, 0, 0, 0, 0, 0, 2, 0,
-                        0, 1, 0, 2, 0, 0, 0, 1, 0, 1,
-                        1, 0, 1, 0, 2, 0, 1, 0, 2, 0,
+                        0, 2, 0, 1, 0, 0, 0, 1, 0, 1,
+                        1, 0, 2, 0, 1, 0, 1, 0, 2, 0,
                         0, 1, 0, 1, 0, 1, 0, 1, 0, 1,}));
 
         data.add(new LevelData(18, 50, 59, 10, 6, new int[]
@@ -237,7 +238,7 @@ public class LevelGenerator {
             else
                 shiftX = t / 2;
 
-            shiftY = (i / numBlocksX) * t + t;
+            shiftY = t / 2 + (i / numBlocksX) * t + t;
             x[i] = shiftX;
             y[i] = shiftY;
         }
