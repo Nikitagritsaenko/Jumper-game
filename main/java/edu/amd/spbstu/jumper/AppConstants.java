@@ -52,7 +52,7 @@ public class AppConstants {
         }
 
         if (gameEngine == null) {
-            gameEngine = new GameEngine();
+            gameEngine = new GameEngine(context);
         }
     }
 
@@ -135,11 +135,28 @@ public class AppConstants {
         AppConstants.getGameEngine().restartGame();
     }
 
+
     public static void setScreenWidth(int screenWidth) {
         SCREEN_WIDTH = screenWidth;
     }
 
     public static void setScreenHeight(int screenHeight) {
         SCREEN_HEIGHT = screenHeight;
+    }
+
+    public static int getExitX() {
+        return exitX;
+    }
+
+    public static int getExitY() {
+        return exitY;
+    }
+
+    public static int getExitH() {
+        return exitH;
+    }
+
+    public static int getExitW() {
+        return exitW;
     }
 }

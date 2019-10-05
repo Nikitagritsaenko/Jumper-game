@@ -3,6 +3,7 @@
     package="edu.amd.spbstu.jumper">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -28,7 +29,8 @@
         </activity>
         <activity
             android:name=".Level"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape"
+            >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

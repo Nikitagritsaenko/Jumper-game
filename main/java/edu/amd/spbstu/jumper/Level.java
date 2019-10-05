@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +32,10 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     private static Toast backToast;
     private int clickCount = 0;
 
+    public String getLevelText() {
+        return getBaseContext().getString(R.string.on_back_button_pressed);
+    }
+
     private static void cancelToast() {
         if (backToast != null) {
             backToast.cancel();
@@ -39,6 +46,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.println("CREATE");
+
         super.onCreate(savedInstanceState);
 
         gameView = new GameView(this);
@@ -66,6 +74,10 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
                         }
                     }
                 });
+
+        int level = AppConstants.getGameEngine().loadUserProgress();
+        System.out.println("Current user progress is: ");
+        System.out.println(level);
 
     }
 
@@ -200,6 +212,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     @Override
     protected void onStop() {
         soundPlayer.pauseMenuSound();
+        AppConstants.getGameEngine().pauseGame();
         super.onStop();
     }
 
@@ -236,4 +249,13 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
         }
         backPressedTime = System.currentTimeMillis();
     }
+
+    PhoneStateListener phoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            AppConstants.getGameEngine().pauseGame();
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
+
 }

@@ -13,9 +13,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 public class GameMenu extends AppCompatActivity {
     private long backPressedTime;
     private static Toast backToast;
@@ -73,6 +70,10 @@ public class GameMenu extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        SoundPlayer sp = AppConstants.getSoundPlayer();
+        if (sp != null) {
+            //sp.release();
+        }
         super.onDestroy();
     }
 

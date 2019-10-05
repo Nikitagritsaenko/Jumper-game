@@ -1,6 +1,7 @@
 package edu.amd.spbstu.jumper;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -12,6 +13,9 @@ public class GameThread extends Thread {
     private long startTime, loopTime;
     private long delay = 33;
 
+    private Paint levelText = new Paint();
+
+
     public GameThread(SurfaceHolder holder) {
         this.surfaceHolder = holder;
         isRunning = true;
@@ -19,13 +23,13 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
+
         while (isRunning) {
             startTime = SystemClock.uptimeMillis();
             Canvas canvas = surfaceHolder.lockCanvas(null);
             if (canvas != null) {
                 synchronized (surfaceHolder) {
                     //if (AppConstants.getGameEngine() != null && !AppConstants.getGameEngine().isRestarting()) {
-
                         AppConstants.getGameEngine().updateAndDrawBackgroundImage(canvas);
                         AppConstants.getGameEngine().updateBlocks(canvas);
                         AppConstants.getGameEngine().updateAndDrawPlayer(canvas);

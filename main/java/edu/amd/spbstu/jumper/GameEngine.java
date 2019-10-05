@@ -1,13 +1,26 @@
 package edu.amd.spbstu.jumper;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.View;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Locale;
 
+import static android.content.Context.MODE_PRIVATE;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
+import static java.lang.Math.subtractExact;
 
 public class GameEngine {
     private BackgroundImage backgroundImage;
@@ -33,6 +46,12 @@ public class GameEngine {
     private Block lastBlock;
     private int pos = 0;
     private double jumpNum = 5.0;
+    //private static final String FILE_NAME = "/sdcard/Android/data/jumper/progress.txt";
+    private static final String FILE_NAME = "progress.txt";
+
+    public String levelText;
+    public Paint levelPainter = new Paint();
+    public Context context;
 
     public static void setMovingLeft(boolean movingLeft) {
         if (hasTouchedBlock) {
@@ -48,14 +67,34 @@ public class GameEngine {
         }
     }
 
-    public GameEngine() {
-
+    public GameEngine(Context context) {
+        this.context = context;
+        levelText = context.getString(R.string.level);
+        levelPainter.setColor(context.getResources().getColor(R.color.text_black));
+        levelPainter.setAntiAlias(true);
+        levelPainter.setStyle(Paint.Style.FILL);
+        String strLang = Locale.getDefault().getDisplayLanguage();
+        float size;
+        if (strLang.equalsIgnoreCase("english"))
+            size = AppConstants.getExitW() / 2;
+        else
+            size = AppConstants.getExitW() / 2.5f;
+        levelPainter.setTextSize(size);
+        levelPainter.setTextAlign(Paint.Align.CENTER);
     }
 
     public void updateAndDrawBackgroundImage(Canvas canvas) {
+        String text = levelText;
+        text += " ";
+        text += Integer.toString(AppConstants.getCurrLevel());
+        text += " / ";
+        text += Integer.toString(AppConstants.getNumLevels());
+
         canvas.drawBitmap(AppConstants.getBitmapBank().getBackground(), backgroundImage.getX(), backgroundImage.getY(), null);
         canvas.drawBitmap(AppConstants.getBitmapBank().getRestart(), AppConstants.restartX, AppConstants.restartY, null);
         canvas.drawBitmap(AppConstants.getBitmapBank().getExit(), AppConstants.exitX, AppConstants.exitY, null);
+        canvas.drawText(text,  AppConstants.getExitX() + AppConstants.getExitW() * 2.4f,
+                AppConstants.getExitY() + AppConstants.getExitH() / 2, levelPainter);
 
         if (gameState != GameStates.PAUSED)
             canvas.drawBitmap(AppConstants.getBitmapBank().getPause(), AppConstants.pauseX, AppConstants.pauseY, null);
@@ -274,30 +313,70 @@ public class GameEngine {
                 makeJump(curr_block, next_block);
                 pos++;
             }
-
-
-            /*if (curr_block.getY() == next_block.getY()) {
-                double sy = curr_block.getY() - player.getY();
-                double sx = curr_block.getX() - player.getX();
-                double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
-
-                if (player.getVelocity() > curr_block.getInitVelocity() * 0.4) {
-                    makeJump(curr_block, next_block);
-                    pos++;
-                }
-            }
-            else {
-                if (player.getVelocity() > curr_block.getInitVelocity() - 10) {
-                    makeJump(curr_block, next_block);
-                    pos++;
-                }
-            }*/
-
         }
     }
 
+    public void saveUserProgress() {
+        int level = loadUserProgress();
+        if (level >= AppConstants.getCurrLevel())
+            return;
+
+        String text = Integer.toString(AppConstants.getCurrLevel());
+        FileOutputStream fos = null;
+
+        try {
+            fos = context.openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(text.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        System.out.println("Writing curr progress...");
+        System.out.println(text);
+    }
+
+    public int loadUserProgress() {
+        FileInputStream fis = null;
+        String text = new String();
+        try {
+            fis = context.openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            text = br.readLine();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        int level = 1;
+        if (!text.isEmpty())
+             level = Integer.parseInt(text);
+        return level;
+    }
+
+
     public void loadNextLevel() {
+
         AppConstants.setCurrLevel(AppConstants.getCurrLevel() + 1);
+        saveUserProgress();
         restartGame();
     }
 
@@ -445,14 +524,6 @@ public class GameEngine {
 
     public HamiltonianCycle getHc() {
         return hc;
-    }
-
-    public Block getLastBlock() {
-        return lastBlock;
-    }
-
-    public void setLastBlock(Block lastBlock) {
-        this.lastBlock = lastBlock;
     }
 
 }

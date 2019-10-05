@@ -124,4 +124,11 @@ public class SoundPlayer {
         mediaPlayer.setVolume(1f, 1f);
     }
 
+    public void release() {
+        soundPool.release();
+        soundPool = null;
+        mediaPlayer.release();
+        mediaPlayer = null;
+    }
+
 }

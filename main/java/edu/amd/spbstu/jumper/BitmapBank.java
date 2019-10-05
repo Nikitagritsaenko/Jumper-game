@@ -133,12 +133,12 @@ public class BitmapBank {
 
         AppConstants.exitH = exit.getHeight();
         AppConstants.exitW = exit.getWidth();
-        AppConstants.exitX = AppConstants.getScreenWidth() - 2 * pause.getWidth();
+        AppConstants.exitX = AppConstants.getScreenWidth() - 4 * pause.getWidth();
         AppConstants.exitY = 0;
 
         AppConstants.pauseH = pause.getHeight();
         AppConstants.pauseW = pause.getWidth();
-        AppConstants.pauseX = AppConstants.getScreenWidth() - 3 * pause.getWidth();
+        AppConstants.pauseX = AppConstants.getScreenWidth() - 5 * pause.getWidth();
         AppConstants.pauseY = 0;
 
         AppConstants.restartH = restart.getHeight();

@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+
 public class GameLevels extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -39,7 +41,9 @@ public class GameLevels extends AppCompatActivity {
             }
         });
 
-        for (Integer i = 1; i <= AppConstants.getNumLevels(); i++) {
+        int levelsUnlocked = AppConstants.getGameEngine().loadUserProgress();
+        //int levelsUnlocked = 20;
+        for (int i = 1; i <= levelsUnlocked; i++) {
             String id = "textView" + Integer.toString(i);
             int resID = getResources().getIdentifier(id, "id", getPackageName());
             final TextView textView = (TextView) findViewById(resID);
@@ -53,6 +57,7 @@ public class GameLevels extends AppCompatActivity {
                         int level = Integer.parseInt(name);
                         AppConstants.setCurrLevel(level);
 
+
                         Intent intent = new Intent(GameLevels.this, Level.class);
                         startActivity(intent);
                         finish();
@@ -61,6 +66,15 @@ public class GameLevels extends AppCompatActivity {
                     }
                 }
             });
+            textView.setText(Integer.toString(i));
+        }
+
+        for (int i = levelsUnlocked + 1; i <= AppConstants.getNumLevels(); i++) {
+            String id = "textView" + Integer.toString(i);
+            int resID = getResources().getIdentifier(id, "id", getPackageName());
+            final TextView textView = (TextView) findViewById(resID);
+            textView.setBackgroundResource(R.drawable.locked);
+            textView.setText("");
         }
 
     }

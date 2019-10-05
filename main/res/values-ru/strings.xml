@@ -3,6 +3,7 @@
     <string name="app_name">Прыгун</string>
     <string name="start">Старт</string>
     <string name="back">Назад</string>
+    <string name="level">Уровень</string>
     <string name="str_amd_url">https://amd.spbstu.ru/</string>
     <string name="str_depth">Кафедра Прикладной Математики</string>
     <string name="str_university1">Санкт-Петербургский Политехнический</string>

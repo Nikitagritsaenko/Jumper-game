@@ -2,6 +2,7 @@
     <string name="app_name">Jumper</string>
     <string name="start">Start</string>
     <string name="back">Back</string>
+    <string name="level">Level</string>
     <string name="str_amd_url">https://amd.spbstu.ru/</string>
     <string name="str_depth">Applied Math Department</string>
     <string name="str_university1">Peter the Great St.Petersburg</string>
