@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
+import java.util.ArrayList;
+
 import static java.lang.Math.min;
 import static java.lang.Math.round;
 
@@ -21,7 +23,7 @@ public class BitmapBank {
     private Bitmap exit;
     private Bitmap soundOn;
     private Bitmap soundOff;
-    private Bitmap b, b_special;
+    private Bitmap b, b_special, b_double, b_finish;
 
     private double step;
     private int numBlocksX;
@@ -78,8 +80,9 @@ public class BitmapBank {
         AppConstants.setPlayerH(player.getHeight());
     }
 
-    public void initBlocks(){
+    public void initBlocks(ArrayList<BlockType> block_types){
         if (blocks == null) {
+            int[] degrees = LevelGenerator.data.get(AppConstants.getCurrLevel() - 1).getIndices();
             blocks = new Bitmap[numBlocks];
 
             int startIdx = AppConstants.getGameEngine().getStartIdx();
@@ -95,19 +98,25 @@ public class BitmapBank {
             int j = 1;
             for (int i = 0; i < numBlocks; i++) {
                 if (i != startIdx && i != endIdx) {
-                    blocks[j] = b;
+                    if (block_types.get(j) != BlockType.DESTROYABLE_2)
+                        blocks[j] = b;
+                    else
+                        blocks[j] = b_double;
                     blocks[j] = setImageSize(blocks[j], player.getWidth(), player.getHeight());
                     j++;
                 }
             }
 
 
-            blocks[numBlocks - 1] = b_special;
-            blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight());
+            blocks[numBlocks - 1] = b_finish;
+            blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight() * 2);
 
             AppConstants.setBlockH(blocks[0].getHeight());
             AppConstants.setBlockW(blocks[0].getWidth());
+
         }
+        else
+            AppConstants.getBitmapBank().maximizeAllBlocks();
     }
 
     public BitmapBank(Resources res) {
@@ -130,6 +139,8 @@ public class BitmapBank {
         player = BitmapFactory.decodeResource(res, R.drawable.penguine);
         b = BitmapFactory.decodeResource(res, R.drawable.ice_cube);
         b_special = BitmapFactory.decodeResource(res, R.drawable.ice_cube_special);
+        b_double = BitmapFactory.decodeResource(res, R.drawable.ice_cube_double);
+        b_finish = BitmapFactory.decodeResource(res, R.drawable.ice_cube_finish);
 
         AppConstants.exitH = exit.getHeight();
         AppConstants.exitW = exit.getWidth();

@@ -11,7 +11,7 @@ import static java.lang.Math.min;
 
 
 public class LevelGenerator {
-    private ArrayList<LevelData> data = new ArrayList<>();
+    public static ArrayList<LevelData> data = new ArrayList<>();
     private int sizeX, sizeY;
     private int startIdx, endIdx;
     public static Integer[] x;
@@ -31,9 +31,6 @@ public class LevelGenerator {
 
         AppConstants.getBitmapBank().scalePlayer(step / 2.0);
         AppConstants.getGameEngine().getPlayer().setFlipped(false);
-        AppConstants.getBitmapBank().initBlocks();
-
-        AppConstants.getBitmapBank().maximizeAllBlocks();
 
     }
 
@@ -203,7 +200,6 @@ public class LevelGenerator {
     }
 
     public ArrayList<Block> generateBlocks(int level) {
-        System.out.println();
         initLevels();
 
         int[] activeBlocks = getBlockIdxs(level);

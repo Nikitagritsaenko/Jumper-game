@@ -158,7 +158,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
             finish();
         }
 
-        if (x < AppConstants.pauseW * 2 && y < AppConstants.pauseW * 2) {
+        if (x < AppConstants.pauseW * 4 && y < AppConstants.pauseW * 3) {
 
             long time = System.currentTimeMillis();
             long timeToPressAgain = 1000;

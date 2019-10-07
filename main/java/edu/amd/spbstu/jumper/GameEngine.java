@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.Button;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -25,6 +26,7 @@ import static java.lang.Math.subtractExact;
 public class GameEngine {
     private BackgroundImage backgroundImage;
     private ArrayList<Block> blocks;
+    private ArrayList<BlockType> blockTypes = new ArrayList<>();
     private ArrayList<Block> currBlocks;
     private LevelGenerator lg = new LevelGenerator();
     private HamiltonianCycle hc;
@@ -108,15 +110,21 @@ public class GameEngine {
     }
 
     public void updateBlocks(Canvas canvas) {
+        if (blockTypes == null)
+            return;
+
         int len = AppConstants.getBitmapBank().getBlocksNum();
         if (AppConstants.getBitmapBank().getBlocks().length != len) {
             AppConstants.getBitmapBank().setBlocks(null);
-            AppConstants.getBitmapBank().initBlocks();
+            AppConstants.getBitmapBank().initBlocks(blockTypes);
         }
 
         for (int i = 0; i < len; i++) {
             if (blocks.get(i).getDegree() > 0)
-                canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), null);
+                if (blocks.get(i).getType() != BlockType.END)
+                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), null);
+                else
+                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(), blocks.get(i).getCoordY() - AppConstants.getPlayerH(), null);
         }
     }
 
@@ -391,6 +399,14 @@ public class GameEngine {
     public void restartGame() {
 
         blocks = lg.generateBlocks(AppConstants.getCurrLevel());
+        blockTypes.clear();
+        blockTypes = new ArrayList<>();
+        for (Block b: blocks) {
+            blockTypes.add(b.getType());
+        }
+
+        AppConstants.getBitmapBank().initBlocks(blockTypes);
+
         jumpStep = AppConstants.getGridStep() / jumpNum;
 
         backgroundImage = new BackgroundImage();
@@ -526,4 +542,7 @@ public class GameEngine {
         return hc;
     }
 
+    public ArrayList<BlockType> getBlockTypes() {
+        return blockTypes;
+    }
 }

@@ -132,6 +132,7 @@ public class AppConstants {
         if (currLevel > numLevels)
             return;
         AppConstants.currLevel = currLevel;
+        AppConstants.getBitmapBank().setBlocks(null);
         AppConstants.getGameEngine().restartGame();
     }
 

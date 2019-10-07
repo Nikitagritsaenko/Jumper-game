@@ -43,7 +43,7 @@ public class SoundPlayer {
         }
 
 
-        jumpSound = soundPool.load(context, R.raw.jump2, 1);
+        jumpSound = soundPool.load(context, R.raw.jump, 1);
         clickSound = soundPool.load(context, R.raw.click, 1);
         fallingSound = soundPool.load(context, R.raw.falling, 1);
         punchSound = soundPool.load(context, R.raw.punch, 1);
