@@ -50,6 +50,8 @@ public class GameEngine {
     private double jumpNum = 5.0;
     //private static final String FILE_NAME = "/sdcard/Android/data/jumper/progress.txt";
     private static final String FILE_NAME = "progress.txt";
+    private static double delay_sec = 0.9;
+    private static double delay = delay_sec;
 
     public String levelText;
     public Paint levelPainter = new Paint();
@@ -129,6 +131,10 @@ public class GameEngine {
     }
 
     public void updateAndDrawPlayer(Canvas canvas) {
+        System.out.println(delay);
+        if (delay >= 0) {
+            delay -= 1.0 / 60.0;
+        }
         if (isAutoPlay)
             jumpNum = 2.0;
         else
@@ -171,8 +177,10 @@ public class GameEngine {
         }
 
         if (player.getY() > AppConstants.getScreenHeight()) {
-            restartGame();
-            return;
+            if (delay < 0) {
+                restartGame();
+                return;
+            }
         }
 
         if (gameState == GameStates.PAUSED) {
@@ -204,6 +212,7 @@ public class GameEngine {
                 soundPlayer.playPunchSound();
                 soundPlayer.playFallingSound();
                 isFallingSoundPlayed = true;
+                delay = delay_sec;
                 gameState = GameStates.GAMEOVER;
             }
             else if (sx < -1  && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
@@ -213,6 +222,7 @@ public class GameEngine {
                 soundPlayer.playPunchSound();
                 soundPlayer.playFallingSound();
                 isFallingSoundPlayed = true;
+                delay = delay_sec;
                 gameState = GameStates.GAMEOVER;
             }
             else if (sy >= 0  && s < 0.9 * AppConstants.getPlayerH()) {
@@ -397,6 +407,7 @@ public class GameEngine {
     }
 
     public void restartGame() {
+        AppConstants.getSoundPlayer().resumeBackSound();
 
         blocks = lg.generateBlocks(AppConstants.getCurrLevel());
         blockTypes.clear();
@@ -433,6 +444,7 @@ public class GameEngine {
         isWin = false;
 
         lastBlock = blocks.get(0);
+        delay = delay_sec;
 
         if (hc == null) {
             hc = new HamiltonianCycle();
@@ -440,12 +452,12 @@ public class GameEngine {
     }
 
     public void pauseGame() {
-        soundPlayer.pauseMenuSound();
+        soundPlayer.pauseBackSound();
         gameState = GameStates.PAUSED;
     }
 
     public void resumeGame() {
-        soundPlayer.resumeMenuSound();
+        soundPlayer.resumeBackSound();
         gameState = GameStates.PLAYING;
     }
 

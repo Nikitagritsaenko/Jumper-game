@@ -12,8 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameMenu" android:screenOrientation="sensorLandscape"/>
+
+        <activity android:name=".GameMenu" android:screenOrientation="sensorLandscape" android:launchMode="singleTask"/>
         <activity
+
             android:name=".MainActivity"
             android:screenOrientation="sensorLandscape">
             <intent-filter>
@@ -22,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameLevels" android:screenOrientation="sensorLandscape">
+        <activity android:name=".GameLevels" android:screenOrientation="sensorLandscape" android:launchMode="singleTask">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -30,6 +32,7 @@
         <activity
             android:name=".Level"
             android:screenOrientation="sensorLandscape"
+            android:launchMode="singleTask"
             >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -3,6 +3,7 @@ package edu.amd.spbstu.jumper;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -59,25 +60,45 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        disableSystemButtons();
+        //disableActionBar();
 
         soundPlayer = AppConstants.getSoundPlayer();
-        soundPlayer.playMenuSound();
+        soundPlayer.playBackSound();
 
         View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener
+
+        /*decorView.setOnSystemUiVisibilityChangeListener
                 (new View.OnSystemUiVisibilityChangeListener() {
                     @Override
                     public void onSystemUiVisibilityChange(int visibility) {
-                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                            disableSystemButtons();
-                        }
+                        // ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            //disableActionBar();
+                        //}
                     }
-                });
+                });*/
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         int level = AppConstants.getGameEngine().loadUserProgress();
         System.out.println("Current user progress is: ");
         System.out.println(level);
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            super.onWindowFocusChanged(hasFocus);
+            if (hasFocus) {
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
+        }
 
     }
 
@@ -195,15 +216,6 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
         }
     }
 
-    public void disableSystemButtons() {
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-
-        decorView.setSystemUiVisibility(uiOptions);
-
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent me) {
         return gDetector.onTouchEvent(me);
@@ -211,7 +223,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
 
     @Override
     protected void onStop() {
-        soundPlayer.pauseMenuSound();
+        soundPlayer.pauseBackSound();
         AppConstants.getGameEngine().pauseGame();
         super.onStop();
     }
@@ -224,7 +236,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
 
     @Override
     protected void onResume() {
-        soundPlayer.resumeMenuSound();
+        soundPlayer.resumeBackSound();
         super.onResume();
     }
 

@@ -21,7 +21,7 @@ public class SoundPlayer {
     private static int punchSound;
     private static int winSound;
 
-    private boolean isMenuSoundPlaying;
+    private boolean isBackSoundPlaying;
 
     public SoundPlayer(Context context) {
 
@@ -50,8 +50,8 @@ public class SoundPlayer {
         winSound = soundPool.load(context, R.raw.level_winner, 1);
 
         mediaPlayer = MediaPlayer.create(context, R.raw.menu_music);
-
-        isMenuSoundPlaying = false;
+        mediaPlayer.setLooping(true);
+        isBackSoundPlaying = false;
 
     }
 
@@ -76,41 +76,39 @@ public class SoundPlayer {
     }
 
 
-    public void playMenuSound() {
-        if (!isMenuSoundPlaying) {
+    public void playBackSound() {
+        if (!isBackSoundPlaying) {
             System.out.println("PLAY");
 
             mediaPlayer.start();
             mediaPlayer.setLooping(true);
-            isMenuSoundPlaying = true;
+            isBackSoundPlaying = true;
         }
     }
 
-    public void stopMenuSound() {
-        if (isMenuSoundPlaying) {
+    public void stopBackSound() {
+        if (isBackSoundPlaying) {
             System.out.println("STOP");
-
-            mediaPlayer.setLooping(false);
             mediaPlayer.stop();
-            isMenuSoundPlaying = false;
+            isBackSoundPlaying = false;
         }
     }
 
-    public void resumeMenuSound() {
-        if (!isMenuSoundPlaying) {
+    public void resumeBackSound() {
+        if (!isBackSoundPlaying) {
             System.out.println("RESUME");
 
             mediaPlayer.start();
-            isMenuSoundPlaying = true;
+            isBackSoundPlaying = true;
         }
     }
 
-    public void pauseMenuSound() {
-        if (isMenuSoundPlaying) {
+    public void pauseBackSound() {
+        if (isBackSoundPlaying) {
             System.out.println("PAUSE");
 
             mediaPlayer.pause();
-            isMenuSoundPlaying = false;
+            isBackSoundPlaying = false;
         }
     }
 

@@ -17,22 +17,22 @@
         android:id="@+id/startLayout"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="10dp"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:padding="10dp">
 
         <Button
             android:id="@+id/buttonStart"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
             android:background="@drawable/button_stroke_black95_press_white"
             android:orientation="horizontal"
-            android:text="@string/start"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:text="@string/start"
             android:textColor="@color/black"
-            android:textSize="24sp"/>
+            android:textSize="24sp" />
     </LinearLayout>
 </RelativeLayout>
