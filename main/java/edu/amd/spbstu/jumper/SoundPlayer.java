@@ -56,27 +56,39 @@ public class SoundPlayer {
     }
 
     public void playJumpSound() {
+        if (soundPool == null)
+            return;
         soundPool.play(jumpSound, volume, volume, 1, 0, 1.0f);
     }
 
     public void playClickSound() {
+        if (soundPool == null)
+            return;
         soundPool.play(clickSound, volume, volume, 1, 0, 1.0f);
     }
 
     public void playFallingSound() {
+        if (soundPool == null)
+            return;
         soundPool.play(fallingSound, volume * 0.5f, volume * 0.5f, 1, 0, 1.0f);
     }
 
     public void playPunchSound() {
+        if (soundPool == null)
+            return;
         soundPool.play(punchSound, volume, volume, 1, 0, 1.0f);
     }
 
     public void playWinSound() {
+        if (soundPool == null)
+            return;
         soundPool.play(winSound, volume * 0.75f, volume * 0.75f, 1, 0, 1.0f);
     }
 
 
     public void playBackSound() {
+        if (soundPool == null)
+            return;
         if (!isBackSoundPlaying) {
             System.out.println("PLAY");
 
@@ -87,6 +99,8 @@ public class SoundPlayer {
     }
 
     public void stopBackSound() {
+        if (soundPool == null)
+            return;
         if (isBackSoundPlaying) {
             System.out.println("STOP");
             mediaPlayer.stop();
@@ -95,6 +109,8 @@ public class SoundPlayer {
     }
 
     public void resumeBackSound() {
+        if (soundPool == null)
+            return;
         if (!isBackSoundPlaying) {
             System.out.println("RESUME");
 
@@ -104,6 +120,8 @@ public class SoundPlayer {
     }
 
     public void pauseBackSound() {
+        if (soundPool == null)
+            return;
         if (isBackSoundPlaying) {
             System.out.println("PAUSE");
 
@@ -113,20 +131,28 @@ public class SoundPlayer {
     }
 
     public void soundOff() {
+        if (mediaPlayer == null)
+            return;
         volume = 0f;
         mediaPlayer.setVolume(0f, 0f);
     }
 
     public void soundOn() {
+        if (mediaPlayer == null)
+            return;
         volume = 1f;
         mediaPlayer.setVolume(1f, 1f);
     }
 
     public void release() {
-        soundPool.release();
-        soundPool = null;
-        mediaPlayer.release();
-        mediaPlayer = null;
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+        }
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
 }

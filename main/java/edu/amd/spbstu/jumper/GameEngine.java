@@ -1,9 +1,11 @@
 package edu.amd.spbstu.jumper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -85,6 +87,8 @@ public class GameEngine {
             size = AppConstants.getExitW() / 2.5f;
         levelPainter.setTextSize(size);
         levelPainter.setTextAlign(Paint.Align.CENTER);
+
+        saveUserProgress();
     }
 
     public void updateAndDrawBackgroundImage(Canvas canvas) {
@@ -131,7 +135,6 @@ public class GameEngine {
     }
 
     public void updateAndDrawPlayer(Canvas canvas) {
-        System.out.println(delay);
         if (delay >= 0) {
             delay -= 1.0 / 60.0;
         }
@@ -339,55 +342,18 @@ public class GameEngine {
         if (level >= AppConstants.getCurrLevel())
             return;
 
-        String text = Integer.toString(AppConstants.getCurrLevel());
-        FileOutputStream fos = null;
-
-        try {
-            fos = context.openFileOutput(FILE_NAME, MODE_PRIVATE);
-            fos.write(text.getBytes());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        System.out.println("Writing curr progress...");
-        System.out.println(text);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("Level", AppConstants.getCurrLevel());
+        editor.apply();
     }
 
     public int loadUserProgress() {
-        FileInputStream fis = null;
-        String text = new String();
-        try {
-            fis = context.openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            text = br.readLine();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        int level = 1;
-        if (!text.isEmpty())
-             level = Integer.parseInt(text);
-        return level;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int curr_level_progress = preferences.getInt("Level", -1);
+        if (curr_level_progress == 0)
+            return 1;
+        return curr_level_progress;
     }
 
 

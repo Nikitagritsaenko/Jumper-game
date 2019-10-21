@@ -59,12 +59,6 @@ public class BitmapBank {
         isBlockMinimized[i] = true;
     }
 
-    private Bitmap squeezeImage(Bitmap bitmap, int squeeze) {
-        int h = bitmap.getHeight();
-        int w = bitmap.getWidth();
-        return Bitmap.createScaledBitmap(bitmap, w / squeeze, h / squeeze, false);
-    }
-
     private Bitmap setImageSize(Bitmap bitmap, int width, int height) {
         return Bitmap.createScaledBitmap(bitmap, width, height, false);
     }
@@ -82,7 +76,6 @@ public class BitmapBank {
 
     public void initBlocks(ArrayList<BlockType> block_types){
         if (blocks == null) {
-            int[] degrees = LevelGenerator.data.get(AppConstants.getCurrLevel() - 1).getIndices();
             blocks = new Bitmap[numBlocks];
 
             int startIdx = AppConstants.getGameEngine().getStartIdx();
@@ -122,25 +115,34 @@ public class BitmapBank {
     public BitmapBank(Resources res) {
         resources = res;
 
-        pause = BitmapFactory.decodeResource(res, R.drawable.pause);
-        restart = BitmapFactory.decodeResource(res, R.drawable.restart);
+        BitmapFactory.Options options_game_objects = new BitmapFactory.Options();
+        options_game_objects.inSampleSize = 8;
+
+        BitmapFactory.Options options_game_buttons = new BitmapFactory.Options();
+        options_game_buttons.inSampleSize = 1;
+
+        BitmapFactory.Options options_game_background = new BitmapFactory.Options();
+        options_game_background.inSampleSize = 1;
+
+        pause = BitmapFactory.decodeResource(res, R.drawable.pause, options_game_buttons);
+        restart = BitmapFactory.decodeResource(res, R.drawable.restart, options_game_buttons);
         restart = setImageSize(restart, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        play = BitmapFactory.decodeResource(res, R.drawable.play);
+        play = BitmapFactory.decodeResource(res, R.drawable.play, options_game_buttons);
         play = setImageSize(play, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        soundOn = BitmapFactory.decodeResource(res, R.drawable.audio);
+        soundOn = BitmapFactory.decodeResource(res, R.drawable.audio, options_game_buttons);
         soundOn = setImageSize(soundOn, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        soundOff = BitmapFactory.decodeResource(res, R.drawable.no_audio);
+        soundOff = BitmapFactory.decodeResource(res, R.drawable.no_audio, options_game_buttons);
         soundOff = setImageSize(soundOff, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        exit = BitmapFactory.decodeResource(res, R.drawable.exit);
+        exit = BitmapFactory.decodeResource(res, R.drawable.exit, options_game_buttons);
         exit = setImageSize(exit, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
 
-        background = BitmapFactory.decodeResource(res, R.drawable.background2);
+        background = BitmapFactory.decodeResource(res, R.drawable.background2, options_game_background);
         background = scaleImage(background);
-        player = BitmapFactory.decodeResource(res, R.drawable.penguine);
-        b = BitmapFactory.decodeResource(res, R.drawable.ice_cube);
-        b_special = BitmapFactory.decodeResource(res, R.drawable.ice_cube_special);
-        b_double = BitmapFactory.decodeResource(res, R.drawable.ice_cube_double);
-        b_finish = BitmapFactory.decodeResource(res, R.drawable.ice_cube_finish);
+        player = BitmapFactory.decodeResource(res, R.drawable.penguine, options_game_objects);
+        b = BitmapFactory.decodeResource(res, R.drawable.ice_cube, options_game_objects);
+        b_special = BitmapFactory.decodeResource(res, R.drawable.ice_cube_special, options_game_objects);
+        b_double = BitmapFactory.decodeResource(res, R.drawable.ice_cube_double, options_game_objects);
+        b_finish = BitmapFactory.decodeResource(res, R.drawable.ice_cube_finish, options_game_objects);
 
         AppConstants.exitH = exit.getHeight();
         AppConstants.exitW = exit.getWidth();

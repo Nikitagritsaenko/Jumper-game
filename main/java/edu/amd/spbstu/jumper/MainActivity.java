@@ -91,7 +91,12 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
         setView(VIEW_INTRO);
 
         DisplayMetrics metrics = new DisplayMetrics();
-        display.getRealMetrics(metrics);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            display.getRealMetrics(metrics);
+        else
+            display.getMetrics(metrics);
+
 
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == ORIENTATION_LANDSCAPE) {
@@ -104,8 +109,10 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
         // fullscreen
         Window w = getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
     }
 
     @Override
