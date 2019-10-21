@@ -12,7 +12,6 @@ Download game here: https://yadi.sk/d/gUScoBrzqVPRwQ
 ## Game screenshots
 ![](https://github.com/Nikitagritsaenko/Jumper-game/blob/master/screenshots/screen1.jpg)
 ![](https://github.com/Nikitagritsaenko/Jumper-game/blob/master/screenshots/screen2.jpg)
-## Game rules
 
 
 
