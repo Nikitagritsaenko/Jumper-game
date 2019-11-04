@@ -20,7 +20,7 @@ public class Block {
 
         if (type == BlockType.EMPTY)
             degree = 0;
-        else if (type == BlockType.DESTROYABLE_1)
+        else if (type == BlockType.DESTROYABLE_1 || type == BlockType.SPRING)
             degree = 1;
         else if (type == BlockType.DESTROYABLE_2)
             degree = 2;
@@ -31,7 +31,11 @@ public class Block {
         this.y = y;
         this.coordX = x;
         this.coordY = y;
-        this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStep() * 1.3);
+        if (type == BlockType.SPRING)
+            this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStep() * 2.3);
+        else
+            this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStep() * 1.3);
+
     }
 
     public static int dist(ArrayList<Block> blocks, Block a, Block b) {

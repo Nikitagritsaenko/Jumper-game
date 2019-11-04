@@ -48,57 +48,63 @@ public class LevelGenerator {
                                  0, 0, 1, 1, 0,
                                  }));
 
-        data.add(new LevelData(3, 7, 20, 7, 3, new int[]{
+        data.add(new LevelData(3, 0, 8, 5, 2, new int[]
+                        {1, 0, 0, 0, 0,
+                        0, 1, 1, 1, 1,
+                }));
+
+
+        data.add(new LevelData(4, 7, 20, 7, 3, new int[]{
                 0, 0, 0, 0, 0, 0, 0,
                 1, 0, 0, 1, 0, 1, 0,
                 0, 1, 1, 0, 1, 0, 1}));
 
-        data.add(new LevelData(4, 6, 16, 5, 4, new int[]
+        data.add(new LevelData(5, 6, 16, 5, 4, new int[]
                         {0, 0, 1, 0, 0,
                          0, 1, 0, 1, 0,
                          0, 0, 0, 0, 0,
                          0, 1, 1, 1, 1,}));
 
 
-        data.add(new LevelData(5, 0, 35, 9, 4, new int[]{
+        data.add(new LevelData(6, 0, 35, 9, 4, new int[]{
                                                                                          1, 0, 0, 1, 0, 1, 0, 0, 0,
                                                                                          0, 0, 1, 0, 1, 0, 0, 0, 1,
                                                                                          0, 1, 0, 0, 0, 1, 0, 1, 0,
                                                                                          0, 0, 0, 0, 0, 1, 1, 0, 1}));
 
-        data.add(new LevelData(6, 6, 21, 7, 4, new int[]
+        data.add(new LevelData(7, 6, 21, 7, 4, new int[]
                         {
                                 0, 0, 0, 0, 0, 0, 1,
                                 0, 0, 1, 0, 0, 1, 0,
                                 1, 1, 0, 1, 0, 1, 0,
                                 1, 0, 1, 0, 1, 0, 0}));
 
-        data.add(new LevelData(7, 0, 23, 8, 3, new int[]
+        data.add(new LevelData(8, 0, 23, 8, 3, new int[]
                 {
                         1, 1, 0, 0, 1, 0, 0, 1,
                         0, 0, 1, 1, 1, 0, 1, 1,
                         0, 1, 0, 0, 1, 1, 0, 1}));
 
 
-        data.add(new LevelData(8, 1, 25, 8, 4, new int[]
+        data.add(new LevelData(9, 1, 25, 8, 4, new int[]
                 {
                         0, 1, 0, 0, 0, 0, 1, 0,
                         0, 0, 1, 0, 1, 1, 0, 1,
                         0, 0, 1, 1, 1, 1, 1, 0,
                         0, 1, 1, 1, 1, 0, 0, 0}));
 
-        data.add(new LevelData(9, 6, 9, 5, 2, new int[]
+        data.add(new LevelData(10, 6, 9, 5, 2, new int[]
                         {0, 0, 0, 0, 0,
                         0, 1, 2, 2, 1,}));
 
-        data.add(new LevelData(10, 9, 23, 7, 4, new int[]
+        data.add(new LevelData(11, 9, 23, 7, 4, new int[]
                         {
                                 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 1, 2, 2, 1, 0,
                                 0, 0, 0, 0, 0, 0, 0,
                                 0, 0, 1, 2, 2, 1, 0}));
 
-        data.add(new LevelData(11, 5, 29, 10, 5, new int[]
+        data.add(new LevelData(12, 5, 29, 10, 5, new int[]
                         {
                                 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
                                 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
@@ -107,41 +113,21 @@ public class LevelGenerator {
                                 0, 0, 1, 1, 0, 0, 1, 0, 0, 0}));
 
 
-        data.add(new LevelData(12, 11, 29, 9, 4, new int[]
+        data.add(new LevelData(13, 11, 29, 9, 4, new int[]
                          {
                                  0, 0, 0, 0, 0, 0, 0, 1, 0,
                                  0, 0, 1, 1, 1, 1, 1, 0, 1,
                                  0, 0, 0, 1, 0, 0, 0, 1, 0,
                                  0, 0, 1, 1, 2, 1, 1, 1, 0}));
 
-        data.add(new LevelData(13, 10, 31, 8, 4, new int[]
+        data.add(new LevelData(14, 10, 31, 8, 4, new int[]
                        {
                                  0, 0, 0, 1, 1, 0, 0, 0,
                                  0, 0, 1, 0, 0, 0, 0, 1,
                                  0, 0, 0, 0, 0, 2, 2, 1,
                                  0, 0, 0, 0, 2, 2, 1, 0}));
 
-
-        data.add(new LevelData(14, 62, 63, 11, 6, new int[]
-                                {
-                                        0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                                        0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0,
-                                        0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0,
-                                        0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
-                                        0, 0, 1, 0, 0, 2, 0, 0, 1, 1, 0,
-                                        0, 0, 0, 1, 1, 0, 2, 1, 1, 2, 2,}));
-
-
-        data.add(new LevelData(15, 38, 60, 11, 6, new int[]
-                        {
-                                0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,
-                                0, 0, 1, 0, 1, 0, 1, 2, 2, 0, 1,
-                                0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1,
-                                0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0,
-                                0, 1, 0, 0, 1, 0, 0, 0, 0, 2, 2,
-                                0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0,}));
-
-        data.add(new LevelData(16, 45, 48, 11, 5, new int[]
+        data.add(new LevelData(15, 45, 48, 11, 5, new int[]
                 {
                         0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1,
                         0, 0, 2, 0, 2, 2, 0, 0, 0, 0, 0,
@@ -149,7 +135,7 @@ public class LevelGenerator {
                         0, 0, 1, 0, 0, 0, 0, 2, 2, 1, 1,
                         0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0,}));
 
-        data.add(new LevelData(17, 1, 65, 11, 6, new int[]
+        data.add(new LevelData(16, 1, 65, 11, 6, new int[]
                 {
                         0, 1, 0, 2, 0, 0, 0, 0, 0, 1, 0,
                         0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 2,
@@ -158,7 +144,7 @@ public class LevelGenerator {
                         0, 1, 0, 2, 0, 1, 0, 1, 0, 2, 0,
                         0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,}));
 
-        data.add(new LevelData(18, 56, 65, 11, 6, new int[]
+        data.add(new LevelData(17, 56, 65, 11, 6, new int[]
                 {
                         0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0,
                         0, 1, 0, 0, 2, 2, 0, 0, 1, 0, 0,
@@ -167,7 +153,7 @@ public class LevelGenerator {
                         0, 0, 1, 1, 0, 0, 0, 2, 0, 0, 1,
                         0, 1, 0, 0, 2, 2, 2, 0, 2, 2, 0,}));
 
-        data.add(new LevelData(19, 35, 56, 11, 6, new int[]
+        data.add(new LevelData(18, 35, 56, 11, 6, new int[]
                 {
                         0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0,
                         0, 0, 2, 0, 0, 1, 0, 1, 0, 1, 1,
@@ -176,13 +162,64 @@ public class LevelGenerator {
                         0, 0, 0, 0, 2, 0, 2, 0, 0, 1, 0,
                         0, 1, 1, 2, 0, 0, 0, 1, 2, 2, 0,}));
 
-        data.add(new LevelData(20, 40, 9, 10, 5, new int[]
+        data.add(new LevelData(19, 40, 9, 10, 5, new int[]
+                {
+                        0, 0, 1, 1, 2, 2, 2, 2, 0, 1,
+                        0, 1, 0, 0, 0, 0, 0, 0, 2, 0,
+                        0, 0, 2, 2, 1, 1, 1, 1, 0, 1,
+                        0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+                        0, 1, 1, 2, 2, 2, 2, 1, 0, 0, }));
+
+
+        data.add(new LevelData(20, 21, 13, 7, 4, new int[]
+                {
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 0, 1, 0, 1,
+                        0, 0, 0, 0, 0, 0, 0,
+                        1, 3, 0, 3, 0, 3, 0}));
+
+        data.add(new LevelData(21, 17, 21, 8, 3, new int[]
+                {
+                        0, 0, 0, 0, 2, 1, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 1, 3, 0, 1, 0, 0}));
+
+        data.add(new LevelData(22, 17, 20, 8, 3, new int[]
+                {
+                        0, 0, 0, 1, 1, 1, 2, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 3, 0, 1, 2, 2, 3}));
+
+
+        data.add(new LevelData(23, 18, 22, 8, 5, new int[]
+                {
+                        0, 0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 3, 1, 0, 0, 2, 1, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 3, 1, 1, 3}));
+
+        data.add(new LevelData(24, 62, 63, 11, 6, new int[]
+                                {
+                                        0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+                                        0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0,
+                                        0, 0, 2, 0, 3, 0, 0, 0, 1, 2, 0,
+                                        0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
+                                        0, 3, 0, 0, 0, 2, 0, 0, 1, 1, 3,
+                                        0, 0, 0, 0, 3, 0, 2, 1, 1, 2, 2,}));
+
+
+        data.add(new LevelData(25, 38, 60, 11, 6, new int[]
                         {
-                                0, 0, 1, 1, 2, 2, 2, 2, 0, 1,
-                                0, 1, 0, 0, 0, 0, 0, 0, 2, 0,
-                                0, 0, 2, 2, 1, 1, 1, 1, 0, 1,
-                                0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
-                                0, 1, 1, 2, 2, 2, 2, 1, 0, 0, }));
+                                0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+                                0, 0, 1, 0, 1, 0, 1, 2, 2, 0, 0,
+                                0, 1, 0, 2, 0, 0, 3, 0, 0, 3, 1,
+                                0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0,
+                                0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 2,
+                                0, 3, 0, 3, 0, 1, 1, 1, 1, 0, 0,}));
+
+
+
         // --------------------------------------------------------------------------------------------------------------------------
     }
 
@@ -241,6 +278,8 @@ public class LevelGenerator {
                     block = new Block(BlockType.DESTROYABLE_1, x[i], y[i]);
                 else if (activeBlocks[i] == 2)
                     block = new Block(BlockType.DESTROYABLE_2, x[i], y[i]);
+                else if (activeBlocks[i] == 3)
+                    block = new Block(BlockType.SPRING, x[i], y[i]);
                 else
                     block = new Block(BlockType.EMPTY, x[i], y[i]);
                 blocks.add(block);

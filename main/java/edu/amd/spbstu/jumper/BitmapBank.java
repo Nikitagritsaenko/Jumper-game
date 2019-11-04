@@ -23,7 +23,7 @@ public class BitmapBank {
     private Bitmap exit;
     private Bitmap soundOn;
     private Bitmap soundOff;
-    private Bitmap b, b_special, b_double, b_finish;
+    private Bitmap b, b_special, b_double, b_finish, b_spring;
 
     private double step;
     private int numBlocksX;
@@ -91,10 +91,12 @@ public class BitmapBank {
             int j = 1;
             for (int i = 0; i < numBlocks; i++) {
                 if (i != startIdx && i != endIdx) {
-                    if (block_types.get(j) != BlockType.DESTROYABLE_2)
-                        blocks[j] = b;
-                    else
+                    if (block_types.get(j) == BlockType.DESTROYABLE_2)
                         blocks[j] = b_double;
+                    else if (block_types.get(j) == BlockType.SPRING)
+                        blocks[j] = b_spring;
+                    else
+                        blocks[j] = b;
                     blocks[j] = setImageSize(blocks[j], player.getWidth(), player.getHeight());
                     j++;
                 }
@@ -143,6 +145,7 @@ public class BitmapBank {
         b_special = BitmapFactory.decodeResource(res, R.drawable.ice_cube_special, options_game_objects);
         b_double = BitmapFactory.decodeResource(res, R.drawable.ice_cube_double, options_game_objects);
         b_finish = BitmapFactory.decodeResource(res, R.drawable.ice_cube_finish, options_game_objects);
+        b_spring = BitmapFactory.decodeResource(res, R.drawable.ice_cube_spring, options_game_objects);
 
         AppConstants.exitH = exit.getHeight();
         AppConstants.exitW = exit.getWidth();

@@ -214,14 +214,15 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     }
 
     public void runAutoPlay() {
-        HamiltonianCycle hc = AppConstants.getGameEngine().getHc();
+        // NO AUTOPLAY!
+        /*HamiltonianCycle hc = AppConstants.getGameEngine().getHc();
         GameEngine ge = AppConstants.getGameEngine();
 
 
         if (!ge.isAutoPlay()) {
             ge.setPath(hc.findHamiltonianPath());
             ge.setIsAutoPlay(true);
-        }
+        }*/
     }
 
     @Override

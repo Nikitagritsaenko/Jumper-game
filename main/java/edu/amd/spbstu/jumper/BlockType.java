@@ -5,6 +5,7 @@ public enum BlockType {
     END,
     DESTROYABLE_1,
     DESTROYABLE_2,
+    SPRING,
     EMPTY,
     BLOCK_TYPE_DIM
 }

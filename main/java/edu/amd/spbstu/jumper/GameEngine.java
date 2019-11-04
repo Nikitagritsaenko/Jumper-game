@@ -231,7 +231,10 @@ public class GameEngine {
             else if (sy >= 0  && s < 0.9 * AppConstants.getPlayerH()) {
                 player.setVelocity(-b.getInitVelocity());
                 player.setY(player.getY() + player.getVelocity());
-                soundPlayer.playJumpSound();
+                if (b.getType() == BlockType.SPRING)
+                    soundPlayer.playSpringSound();
+                else
+                    soundPlayer.playJumpSound();
                 hasTouchedBlock = true;
                 lastBlock = b;
                 int lastBlockIdxTmp = lastBlockIdx;
@@ -290,7 +293,10 @@ public class GameEngine {
     }
 
     public void updateAutoPlaying() {
-        if (!isAutoPlay || isMovingRight || isMovingLeft || !hasTouchedBlock)
+        // NO AUTOPLAY
+        isAutoPlay = false;
+        return;
+        /*if (!isAutoPlay || isMovingRight || isMovingLeft || !hasTouchedBlock)
             return;
 
         if (pos + 1 >= path.length) {
@@ -334,7 +340,7 @@ public class GameEngine {
                 makeJump(curr_block, next_block);
                 pos++;
             }
-        }
+        }*/
     }
 
     public void saveUserProgress() {
@@ -349,11 +355,13 @@ public class GameEngine {
     }
 
     public int loadUserProgress() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return 40;
+
+        /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         int curr_level_progress = preferences.getInt("Level", -1);
         if (curr_level_progress == 0)
             return 1;
-        return curr_level_progress;
+        return curr_level_progress;*/
     }
 
 

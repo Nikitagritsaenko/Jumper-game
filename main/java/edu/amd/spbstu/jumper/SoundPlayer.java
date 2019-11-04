@@ -16,6 +16,7 @@ public class SoundPlayer {
     private static SoundPool soundPool;
     private float volume = 1f;
     private static int jumpSound;
+    private static int springSound;
     private static int clickSound;
     private static int fallingSound;
     private static int punchSound;
@@ -48,6 +49,7 @@ public class SoundPlayer {
         fallingSound = soundPool.load(context, R.raw.falling, 1);
         punchSound = soundPool.load(context, R.raw.punch, 1);
         winSound = soundPool.load(context, R.raw.level_winner, 1);
+        springSound = soundPool.load(context, R.raw.spring, 1);
 
         mediaPlayer = MediaPlayer.create(context, R.raw.menu_music);
         mediaPlayer.setLooping(true);
@@ -59,6 +61,12 @@ public class SoundPlayer {
         if (soundPool == null)
             return;
         soundPool.play(jumpSound, volume, volume, 1, 0, 1.0f);
+    }
+
+    public void playSpringSound() {
+        if (soundPool == null)
+            return;
+        soundPool.play(springSound, volume, volume, 1, 0, 1.0f);
     }
 
     public void playClickSound() {
