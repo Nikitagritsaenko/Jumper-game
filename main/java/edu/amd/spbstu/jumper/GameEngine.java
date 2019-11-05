@@ -345,6 +345,10 @@ public class GameEngine {
 
     public void saveUserProgress() {
         int level = loadUserProgress();
+        // TEMPORARY!
+        if (level == 30)
+            return;
+        //
         if (level >= AppConstants.getCurrLevel())
             return;
 
@@ -355,7 +359,8 @@ public class GameEngine {
     }
 
     public int loadUserProgress() {
-        return 40;
+        // TEMPORARY!
+        return 30;
 
         /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         int curr_level_progress = preferences.getInt("Level", -1);

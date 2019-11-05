@@ -129,6 +129,10 @@ public class AppConstants {
     }
 
     public static void setCurrLevel(int currLevel) {
+        // TEMPORARY
+        if (currLevel > 30)
+            return;
+        //
         if (currLevel > numLevels)
             return;
         AppConstants.currLevel = currLevel;
