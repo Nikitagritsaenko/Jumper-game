@@ -6,24 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.View;
-import android.widget.Button;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static android.content.Context.MODE_PRIVATE;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
-import static java.lang.Math.subtractExact;
 
 public class GameEngine {
     private BackgroundImage backgroundImage;
@@ -38,20 +25,15 @@ public class GameEngine {
     private static boolean isMovingLeft = false;
     private static boolean isMovingRight = false;
     private static boolean isSoundOn = true;
-    private boolean isWin = false;
     private double totalMoved = 0.0;
     private double jumpStep;
     private static boolean hasTouchedBlock = false;
-    private static boolean isFallingSoundPlayed = false;
     private boolean isAutoPlay = false;
     private int[] path;
     private int startIdx, endIdx;
     private int lastBlockIdx = 0;
-    private Block lastBlock;
     private int pos = 0;
     private double jumpNum = 5.0;
-    //private static final String FILE_NAME = "/sdcard/Android/data/jumper/progress.txt";
-    private static final String FILE_NAME = "progress.txt";
     private static double delay_sec = 0.9;
     private static double delay = delay_sec;
 
@@ -127,11 +109,21 @@ public class GameEngine {
 
         for (int i = 0; i < len; i++) {
             if (blocks.get(i).getDegree() > 0)
-                if (blocks.get(i).getType() != BlockType.END)
-                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), null);
-                else
-                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(), blocks.get(i).getCoordY() - AppConstants.getPlayerH(), null);
+                if (blocks.get(i).getType() == BlockType.END) {
+                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(),
+                            blocks.get(i).getCoordY() - AppConstants.getPlayerH(), null);
+                }
+                else if (blocks.get(i).getType() == BlockType.PORTAL) {
+                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX() - AppConstants.getBlockH() / 2,
+                            blocks.get(i).getCoordY() - AppConstants.getBlockW() / 2, null);
+                }
+                else {
+                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i],
+                            blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), null);
+                }
+
         }
+
     }
 
     public void updateAndDrawPlayer(Canvas canvas) {
@@ -142,14 +134,14 @@ public class GameEngine {
             jumpNum = 2.0;
         else
             jumpNum = 5.0;
-        jumpStep = AppConstants.getGridStep() / jumpNum;
+        jumpStep = AppConstants.getGridStepX() / jumpNum;
 
         if (gameState != GameStates.PAUSED) {
             player.setVelocity(player.getVelocity() + AppConstants.getGravity());
             player.setY(player.getY() + player.getVelocity());
             if (gameState != GameStates.GAMEOVER) {
                 if (isMovingRight) {
-                    if (totalMoved >= AppConstants.getGridStep() / jumpStep) {
+                    if (totalMoved >= AppConstants.getGridStepX() / jumpStep) {
                         isMovingRight = false;
                         totalMoved = 0.0;
                     } else {
@@ -159,7 +151,7 @@ public class GameEngine {
                 }
 
                 if (isMovingLeft) {
-                    if (totalMoved >= AppConstants.getGridStep() / jumpStep) {
+                    if (totalMoved >= AppConstants.getGridStepX() / jumpStep) {
                         isMovingLeft = false;
                         totalMoved = 0.0;
                     } else {
@@ -214,7 +206,6 @@ public class GameEngine {
                 player.setX(b.getX() - AppConstants.getPlayerW());
                 soundPlayer.playPunchSound();
                 soundPlayer.playFallingSound();
-                isFallingSoundPlayed = true;
                 delay = delay_sec;
                 gameState = GameStates.GAMEOVER;
             }
@@ -224,7 +215,6 @@ public class GameEngine {
                 player.setX(b.getX() + AppConstants.getPlayerW());
                 soundPlayer.playPunchSound();
                 soundPlayer.playFallingSound();
-                isFallingSoundPlayed = true;
                 delay = delay_sec;
                 gameState = GameStates.GAMEOVER;
             }
@@ -236,13 +226,12 @@ public class GameEngine {
                 else
                     soundPlayer.playJumpSound();
                 hasTouchedBlock = true;
-                lastBlock = b;
+
                 int lastBlockIdxTmp = lastBlockIdx;
                 lastBlockIdx = b.getIdx();
                 if (b.getType() == BlockType.END && getBlocksAlive().size() == 2) {
                     isAutoPlay = false;
                     player.setY(b.getY() - AppConstants.getPlayerH());
-                    isWin = true;
                     soundPlayer.playWinSound();
                     loadNextLevel();
                 }
@@ -345,10 +334,7 @@ public class GameEngine {
 
     public void saveUserProgress() {
         int level = loadUserProgress();
-        // TEMPORARY!
-        if (level == 30)
-            return;
-        //
+
         if (level >= AppConstants.getCurrLevel())
             return;
 
@@ -360,7 +346,7 @@ public class GameEngine {
 
     public int loadUserProgress() {
         // TEMPORARY!
-        return 30;
+        return 40;
 
         /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         int curr_level_progress = preferences.getInt("Level", -1);
@@ -397,7 +383,7 @@ public class GameEngine {
 
         AppConstants.getBitmapBank().initBlocks(blockTypes);
 
-        jumpStep = AppConstants.getGridStep() / jumpNum;
+        jumpStep = AppConstants.getGridStepX() / jumpNum;
 
         backgroundImage = new BackgroundImage();
 
@@ -408,21 +394,17 @@ public class GameEngine {
         }
 
         player.setX(blocks.get(0).getX());
-        player.setY(blocks.get(0).getY() - (int)(AppConstants.getBlockH() * 0.8) - AppConstants.getGridStep());
+        player.setY(blocks.get(0).getY() - (int)(AppConstants.getBlockH() * 0.8) - AppConstants.getGridStepX());
 
         player.setVelocity(0.0);
         isMovingLeft = false;
         isMovingRight = false;
         totalMoved = 0.0;
         hasTouchedBlock = false;
-        isFallingSoundPlayed = false;
         gameState = GameStates.PLAYING;
         lastBlockIdx = 0;
         pos = 0;
         isAutoPlay = false;
-        isWin = false;
-
-        lastBlock = blocks.get(0);
         delay = delay_sec;
 
         if (hc == null) {

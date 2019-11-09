@@ -19,8 +19,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import static java.lang.Math.abs;
 
 public class Level extends AppCompatActivity implements GestureDetector.OnGestureListener {
@@ -32,10 +30,6 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     private long autoplayPressedTime;
     private static Toast backToast;
     private int clickCount = 0;
-
-    public String getLevelText() {
-        return getBaseContext().getString(R.string.on_back_button_pressed);
-    }
 
     private static void cancelToast() {
         if (backToast != null) {
@@ -58,9 +52,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
 
         // fullscreen mode
         Window w = getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
-        //disableActionBar();
+        //w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         soundPlayer = AppConstants.getSoundPlayer();
         soundPlayer.playBackSound();
@@ -270,13 +262,4 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
         }
         backPressedTime = System.currentTimeMillis();
     }
-
-    PhoneStateListener phoneStateListener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            AppConstants.getGameEngine().pauseGame();
-            super.onCallStateChanged(state, incomingNumber);
-        }
-    };
-
 }

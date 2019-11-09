@@ -1,21 +1,9 @@
 package edu.amd.spbstu.jumper;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Point;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
-
-import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
-
 
 public class AppConstants {
     private static GameEngine gameEngine;
@@ -27,7 +15,7 @@ public class AppConstants {
     private static int numLevels = 40;
 
     private static double gravity;
-    private static int gridStep;
+    private static int gridStepX, gridStepY;
     private static int playerH;
     private static int playerW;
     private static int blockW;
@@ -80,8 +68,12 @@ public class AppConstants {
         return SCREEN_HEIGHT;
     }
 
-    public static int getGridStep() {
-        return gridStep;
+    public static int getGridStepX() {
+        return gridStepX;
+    }
+
+    public static int getGridStepY() {
+        return gridStepY;
     }
 
     public static int getPlayerH() {
@@ -124,15 +116,16 @@ public class AppConstants {
         return currLevel;
     }
 
-    public static void setGridStep(int gridStep) {
-        AppConstants.gridStep = gridStep;
+    public static void setGridStepX(int gridStepX) {
+        AppConstants.gridStepX = gridStepX;
+    }
+
+    public static void setGridStepY(int gridStepY) {
+        AppConstants.gridStepY = gridStepY;
     }
 
     public static void setCurrLevel(int currLevel) {
-        // TEMPORARY
-        if (currLevel > 30)
-            return;
-        //
+
         if (currLevel > numLevels)
             return;
         AppConstants.currLevel = currLevel;

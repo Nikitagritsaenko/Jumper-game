@@ -3,42 +3,21 @@ package edu.amd.spbstu.jumper;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
-import java.util.Locale;
-
-import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
-
-public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, View.OnTouchListener {
+public class MainActivity extends AppCompatActivity {
     private long backPressedTime;
     private static Toast backToast;
-
-    public static final int	VIEW_INTRO		= 0;
-    public static final int	VIEW_GAME       = 1;
-
-    int						m_viewCur = -1;
-
-    AppIntro				m_app;
-    ViewIntro			    m_viewIntro;
-
-    int						m_screenW;
-    int						m_screenH;
 
     private static void cancelToast() {
         if (backToast != null) {
@@ -47,48 +26,28 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button buttonStart = (Button)findViewById(R.id.buttonStart);
 
-        final Window win = getWindow();
-        win.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        buttonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    cancelToast();
+                    Intent intent = new Intent(MainActivity.this, GameLevels.class);
+                    startActivity(intent);
+                    finish();
+                } catch (Exception e) {
 
-        // Application is never sleeps
-        win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+            }
+        });
+
+        Window w = getWindow();
 
         Display display = getWindowManager().getDefaultDisplay();
-        Point point = new Point();
-        display.getSize(point);
-        m_screenW = point.x;
-        m_screenH = point.y;
-
-        Log.d("THREE", "Screen size is " + String.valueOf(m_screenW) + " * " +  String.valueOf(m_screenH) );
-
-        // Detect language
-        String strLang = Locale.getDefault().getDisplayLanguage();
-        int language;
-        if (strLang.equalsIgnoreCase("english"))
-        {
-            Log.d("THREE", "LOCALE: English");
-            language = AppIntro.LANGUAGE_ENG;
-        }
-        else if (strLang.equalsIgnoreCase("русский"))
-        {
-            Log.d("THREE", "LOCALE: Russian");
-            language = AppIntro.LANGUAGE_RUS;
-        }
-        else
-        {
-            Log.d("THREE", "LOCALE unknown: " + strLang);
-            language = AppIntro.LANGUAGE_UNKNOWN;
-
-        }
-        // Create application
-        m_app = new AppIntro(this, language);
-        // Create view
-        setView(VIEW_INTRO);
 
         DisplayMetrics metrics = new DisplayMetrics();
 
@@ -97,18 +56,12 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
         else
             display.getMetrics(metrics);
 
+        AppConstants.setScreenHeight(metrics.heightPixels);
+        AppConstants.setScreenWidth(metrics.widthPixels);
 
-        int orientation = this.getResources().getConfiguration().orientation;
-        if (orientation == ORIENTATION_LANDSCAPE) {
-            AppConstants.setScreenWidth(metrics.widthPixels);
-            AppConstants.setScreenHeight(metrics.heightPixels);
-        } else {
-            AppConstants.setScreenWidth(metrics.heightPixels);
-            AppConstants.setScreenHeight(metrics.widthPixels);
-        }
+        AppConstants.initialization(this.getApplicationContext());
 
         // fullscreen
-        Window w = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
@@ -149,98 +102,18 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCom
         backPressedTime = System.currentTimeMillis();
     }
 
-    public void setView(int viewID)
-    {
-        if (m_viewCur == viewID)
-        {
-            Log.d("THREE", "setView: already set");
-            return;
+    @Override
+    protected void onDestroy() {
+        SoundPlayer sp = AppConstants.getSoundPlayer();
+        if (sp != null) {
+            //sp.release();
         }
-
-        m_viewCur = viewID;
-        if (m_viewCur == VIEW_INTRO)
-        {
-            m_viewIntro = new ViewIntro(this);
-            cancelToast();
-            setContentView(m_viewIntro);
-        }
-        if (m_viewCur == VIEW_GAME)
-        {
-            try {
-                cancelToast();
-                Intent intent = new Intent(MainActivity.this, GameMenu.class);
-                startActivity(intent);
-                finish();
-            } catch (Exception e) {
-
-            }
-        }
-    }
-
-    protected void onPostCreate(Bundle savedInstanceState)
-    {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-
-        // delayedHide(100);
-    }
-    public void onCompletion(MediaPlayer mp)
-    {
-        Log.d("THREE", "onCompletion: Video play is completed");
-        //switchToGame();
-    }
-
-
-    public boolean onTouch(View v, MotionEvent evt)
-    {
-        int x = (int)evt.getX();
-        int y = (int)evt.getY();
-        int touchType = AppIntro.TOUCH_DOWN;
-
-
-        if (evt.getAction() == MotionEvent.ACTION_MOVE)
-            touchType = AppIntro.TOUCH_MOVE;
-        if (evt.getAction() == MotionEvent.ACTION_UP)
-            touchType = AppIntro.TOUCH_UP;
-
-        if (m_viewCur == VIEW_INTRO)
-            return m_viewIntro.onTouch( x, y, touchType);
-        return true;
-    }
-    
-
-    public AppIntro getApp()
-    {
-        return m_app;
-    }
-
-    protected void onResume()
-    {
-        super.onResume();
-        if (m_viewCur == VIEW_INTRO)
-            m_viewIntro.start();
-    }
-
-    protected void onPause()
-    {
-        if (m_viewCur == VIEW_INTRO)
-            m_viewIntro.stop();
-
-        super.onPause();
-    }
-
-    protected void onDestroy()
-    {
         super.onDestroy();
     }
 
-    public void onConfigurationChanged(Configuration confNew)
-    {
-        super.onConfigurationChanged(confNew);
-        m_viewIntro.onConfigurationChanged(confNew);
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
 

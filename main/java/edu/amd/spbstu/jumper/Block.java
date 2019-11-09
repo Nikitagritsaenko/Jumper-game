@@ -1,8 +1,5 @@
 package edu.amd.spbstu.jumper;
 
-
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
 
 import static java.lang.StrictMath.abs;
@@ -20,7 +17,7 @@ public class Block {
 
         if (type == BlockType.EMPTY)
             degree = 0;
-        else if (type == BlockType.DESTROYABLE_1 || type == BlockType.SPRING)
+        else if (type == BlockType.DESTROYABLE_1 || type == BlockType.SPRING || type == BlockType.PORTAL)
             degree = 1;
         else if (type == BlockType.DESTROYABLE_2)
             degree = 2;
@@ -32,9 +29,9 @@ public class Block {
         this.coordX = x;
         this.coordY = y;
         if (type == BlockType.SPRING)
-            this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStep() * 2.3);
+            this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStepY() * 2.3);
         else
-            this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStep() * 1.3);
+            this.initVelocity = Math.sqrt(2.0 * AppConstants.getGravity() * AppConstants.getGridStepY() * 1.3);
 
     }
 
@@ -80,11 +77,11 @@ public class Block {
         }
 
         // a  . . . . . . . . . . . b       b  . . . . . . . . . . . a
-        if (abs(a.getX() - b.getX()) > AppConstants.getGridStep()) {
+        if (abs(a.getX() - b.getX()) > AppConstants.getGridStepX()) {
             return Integer.MAX_VALUE; // impossible to jump from a to b (b is too far from a)
         }
 
-        if (a.getY() - b.getY() > AppConstants.getGridStep()) {
+        if (a.getY() - b.getY() > AppConstants.getGridStepX()) {
             return Integer.MAX_VALUE; // impossible to jump from a to b (b is too far from a)
         }
 
@@ -100,7 +97,7 @@ public class Block {
                     return Integer.MAX_VALUE;
                 }*/
                 if (block.getDegree() > 0 && block.getX() == b.getX()
-                        && b.getY() > block.getY() && block.getY() + AppConstants.getGridStep() > a.getY()) {
+                        && b.getY() > block.getY() && block.getY() + AppConstants.getGridStepY() > a.getY()) {
                     return Integer.MAX_VALUE; // impossible to jump from a to b
                 }
             }
@@ -120,7 +117,7 @@ public class Block {
                     return Integer.MAX_VALUE;
                 }*/
                 if (block.getDegree() > 0 && block.getX() == a.getX()
-                        && /*a.getY() > block.getY() &&*/ a.getY() - block.getY() == AppConstants.getGridStep()) {
+                        && /*a.getY() > block.getY() &&*/ a.getY() - block.getY() == AppConstants.getGridStepY()) {
                     return Integer.MAX_VALUE; // impossible to jump from a to b
                 }
             }
@@ -161,14 +158,6 @@ public class Block {
 
     public int getIdx() {
         return idx;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getCoordX() {

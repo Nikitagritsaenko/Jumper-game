@@ -6,6 +6,7 @@ public enum BlockType {
     DESTROYABLE_1,
     DESTROYABLE_2,
     SPRING,
+    PORTAL,
     EMPTY,
     BLOCK_TYPE_DIM
 }

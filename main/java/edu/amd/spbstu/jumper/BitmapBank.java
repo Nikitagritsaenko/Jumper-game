@@ -6,9 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static java.lang.Math.min;
-import static java.lang.Math.round;
 
 public class BitmapBank {
     Resources resources;
@@ -23,9 +22,12 @@ public class BitmapBank {
     private Bitmap exit;
     private Bitmap soundOn;
     private Bitmap soundOff;
+    private Bitmap portal;
+    private ArrayList<Integer> portalIdxs = new ArrayList<>();
     private Bitmap b, b_special, b_double, b_finish, b_spring;
 
-    private double step;
+    private int stepX, stepY;
+
     private int numBlocksX;
     private int numBlocksY;
 
@@ -43,7 +45,7 @@ public class BitmapBank {
             return;
         blocks[i] = Bitmap.createScaledBitmap(blocks[i], AppConstants.getBlockW(), AppConstants.getBlockH(), false);
         Block b = AppConstants.getGameEngine().getBlocks().get(i);
-        b.setCoordX(b.getCoordX() - (int)(blocks[i].getWidth()    * (1.0 - 1 / squeeze) / 2));
+        b.setCoordX(b.getCoordX() - (int)(blocks[i].getWidth()  * (1.0 - 1 / squeeze) / 2));
 
         isBlockMinimized[i] = false;
     }
@@ -74,6 +76,7 @@ public class BitmapBank {
         AppConstants.setPlayerH(player.getHeight());
     }
 
+
     public void initBlocks(ArrayList<BlockType> block_types){
         if (blocks == null) {
             blocks = new Bitmap[numBlocks];
@@ -95,9 +98,25 @@ public class BitmapBank {
                         blocks[j] = b_double;
                     else if (block_types.get(j) == BlockType.SPRING)
                         blocks[j] = b_spring;
+                    else if (block_types.get(j) == BlockType.PORTAL) {
+                        blocks[j] = portal;
+                        portalIdxs.add(j);
+                    }
                     else
                         blocks[j] = b;
-                    blocks[j] = setImageSize(blocks[j], player.getWidth(), player.getHeight());
+
+                    boolean isPortal = false;
+                    for (int idx: portalIdxs) {
+                        if (idx == j) {
+                            isPortal = true;
+                        }
+                    }
+
+                    if (isPortal)
+                        blocks[j] = setImageSize(blocks[j], player.getWidth() * 2, player.getHeight() * 2);
+                    else
+                        blocks[j] = setImageSize(blocks[j], player.getWidth(), player.getHeight());
+
                     j++;
                 }
             }
@@ -146,6 +165,8 @@ public class BitmapBank {
         b_double = BitmapFactory.decodeResource(res, R.drawable.ice_cube_double, options_game_objects);
         b_finish = BitmapFactory.decodeResource(res, R.drawable.ice_cube_finish, options_game_objects);
         b_spring = BitmapFactory.decodeResource(res, R.drawable.ice_cube_spring, options_game_objects);
+
+        portal = BitmapFactory.decodeResource(res, R.drawable.portal, options_game_buttons);
 
         AppConstants.exitH = exit.getHeight();
         AppConstants.exitW = exit.getWidth();
@@ -218,14 +239,6 @@ public class BitmapBank {
         return numBlocks;
     }
 
-    public void setBlocksNum(int num) {
-        numBlocks = num;
-    }
-
-    public double getStep() {
-        return step;
-    }
-
     public int getNumBlocksX() {
         return numBlocksX;
     }
@@ -238,16 +251,11 @@ public class BitmapBank {
         return numBlocks;
     }
 
-    public int getBackgroundWidth() {
-        return background.getWidth();
+    public void setStepX(int stepX) {
+        this.stepX = stepX;
     }
-
-    public int getBackgroundHeight() {
-        return background.getHeight();
-    }
-
-    public void setStep(double step) {
-        this.step = step;
+    public void setStepY(int stepY) {
+        this.stepY = stepY;
     }
 
     public void setNumBlocksX(int numBlocksX) {

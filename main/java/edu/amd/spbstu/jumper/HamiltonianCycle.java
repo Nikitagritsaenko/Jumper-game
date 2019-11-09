@@ -68,11 +68,6 @@ class HamiltonianCycle
 
     private boolean hamCycleUtil(int graph[][], int path[], int pos)
     {
-        //System.out.println(counter++);
-        //if (counter > 10000) {
-            //System.out.println("BREAK");
-            //return false;
-        //}
         if (pos == V)
         {
             if (graph[path[pos - 1]][path[0]] == 1) {

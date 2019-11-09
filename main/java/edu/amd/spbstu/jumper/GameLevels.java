@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
 
 public class GameLevels extends AppCompatActivity {
 
@@ -31,7 +30,7 @@ public class GameLevels extends AppCompatActivity {
                 try {
                     AppConstants.getSoundPlayer().playClickSound();
 
-                    Intent intent = new Intent(GameLevels.this, GameMenu.class);
+                    Intent intent = new Intent(GameLevels.this, MainActivity.class);
                     startActivity(intent);
                     finish();
 
@@ -106,7 +105,7 @@ public class GameLevels extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         try {
-            Intent intent = new Intent(GameLevels.this, GameMenu.class);
+            Intent intent = new Intent(GameLevels.this, MainActivity.class);
             startActivity(intent);
             finish();
         }

@@ -1,14 +1,6 @@
 package edu.amd.spbstu.jumper;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-
-import static java.lang.Math.min;
-
 
 public class LevelGenerator {
     public static ArrayList<LevelData> data = new ArrayList<>();
@@ -22,14 +14,16 @@ public class LevelGenerator {
         AppConstants.getBitmapBank().setNumBlocksY(sizeY);
         AppConstants.getBitmapBank().setNumBlocks(sizeY * sizeX);
 
-        double stepX = AppConstants.getScreenWidth() / (sizeX + 1.5);
-        double stepY = AppConstants.getScreenHeight() / (sizeY + 1.5);
-        int step = min((int)stepX, (int)stepY);
+        int stepX = AppConstants.getScreenWidth() / (sizeX + 1);
+        int stepY = (int)((double) AppConstants.getScreenHeight() / (sizeY + 1.5));
 
-        AppConstants.getBitmapBank().setStep(step);
-        AppConstants.setGridStep(step);
+        AppConstants.getBitmapBank().setStepX(stepX);
+        AppConstants.getBitmapBank().setStepY(stepY);
 
-        AppConstants.getBitmapBank().scalePlayer(step / 2.0);
+        AppConstants.setGridStepX(stepX);
+        AppConstants.setGridStepY(stepY);
+
+        AppConstants.getBitmapBank().scalePlayer(Math.min(stepX / 2.0, stepY / 2.0));
         AppConstants.getGameEngine().getPlayer().setFlipped(false);
 
     }
@@ -48,9 +42,9 @@ public class LevelGenerator {
                         0, 1, 1, 1, 1,
                 }));
 
-        data.add(new LevelData(3, 6, 16, 5, 4, new int[]
-                        {0, 0, 1, 0, 0,
-                         0, 1, 0, 1, 0,
+        data.add(new LevelData(3, 1, 16, 5, 4, new int[]
+                        {0, 1, 1, 0, 0,
+                         0, 0, 0, 1, 0,
                          0, 0, 0, 0, 0,
                          0, 1, 1, 1, 1,}));
 
@@ -86,12 +80,11 @@ public class LevelGenerator {
                         {0, 0, 0, 0, 0,
                         0, 1, 2, 2, 1,}));
 
-        data.add(new LevelData(9, 9, 23, 7, 4, new int[]
+        data.add(new LevelData(9, 1, 13, 6, 3, new int[]
                         {
-                                0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 1, 2, 2, 1, 0,
-                                0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 1, 2, 2, 1, 0}));
+                                0, 1, 2, 2, 1, 0,
+                                0, 0, 0, 0, 0, 0,
+                                0, 1, 2, 2, 1, 0}));
 
         data.add(new LevelData(10, 5, 29, 10, 5, new int[]
                         {
@@ -188,32 +181,32 @@ public class LevelGenerator {
                         0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0, 1, 3, 1, 1, 3}));
 
-        data.add(new LevelData(22, 1, 53, 11, 6, new int[]
+        data.add(new LevelData(22, 1, 49, 10, 5, new int[]
                 {
-                        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0,
-                        0, 0, 1, 2, 1, 0, 1, 2, 1, 0, 0,
-                        0, 0, 1, 1, 1, 3, 1, 1, 1, 0, 0,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}));
+                        0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1, 1, 0, 1, 1, 1, 0,
+                        0, 0, 1, 2, 1, 0, 1, 2, 1, 0,
+                        0, 0, 1, 1, 1, 3, 1, 1, 1, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                        }));
 
-        data.add(new LevelData(23, 10, 32, 11, 6, new int[]
+        data.add(new LevelData(23, 10, 54, 11, 6, new int[]
                 {
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                         0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0,
-                        0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 1,
+                        0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0,
                         3, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0,
-                        0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 0,
+                        0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 1,
                         0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0,}));
 
-        data.add(new LevelData(24, 0, 27, 11, 6, new int[]
+        data.add(new LevelData(24, 0, 25, 10, 5, new int[]
                 {
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                        0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
-                        0, 1, 0, 0, 3, 0, 0, 0, 0, 1, 0,
-                        0, 1, 3, 0, 0, 0, 3, 0, 3, 1, 0,
-                        0, 1, 1, 3, 3, 1, 1, 3, 1, 1, 0,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,}));
+                        1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+                        0, 1, 0, 0, 3, 1, 0, 0, 0, 1,
+                        0, 1, 3, 0, 0, 0, 3, 0, 3, 1,
+                        0, 1, 1, 3, 3, 1, 1, 3, 1, 1,
+                       }));
 
         data.add(new LevelData(25, 62, 63, 11, 6, new int[]
                                 {
@@ -247,14 +240,14 @@ public class LevelGenerator {
 
 
 
-        data.add(new LevelData(28, 0, 13, 11, 6, new int[]
+        data.add(new LevelData(28, 0, 13, 10, 6, new int[]
                 {
-                        1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0,
-                        0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 3, 0, 3, 0, 3, 0, 3, 0,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 1, 2, 1, 0, 3, 0, 0,
-                        0, 1, 2, 2, 0, 1, 2, 1, 0, 0, 0,}));
+                        1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+                        0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 3, 0, 3, 0, 3, 0, 3,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 1, 2, 1, 0, 3, 0,
+                        0, 1, 2, 2, 0, 1, 2, 1, 0, 0,}));
 
 
         data.add(new LevelData(29, 0, 8, 11, 6, new int[]
@@ -274,6 +267,15 @@ public class LevelGenerator {
                         0, 0, 0, 0, 0, 0, 0, 2, 0, 3, 0,
                         0, 3, 1, 3, 0, 0, 2, 0, 0, 0, 0,
                         0, 3, 0, 0, 0, 1, 0, 0, 3, 0, 0,}));
+
+        data.add(new LevelData(31, 0, 27, 11, 6, new int[]
+                {
+                        1, 0, 4, 0, 0, 0, 0, 0, 1, 1, 0,
+                        0, 0, 0, 1, 1, 1, 2, 2, 0, 0, 1,
+                        0, 0, 2, 0, 0, 1, 0, 0, 2, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 2, 0, 3, 0,
+                        0, 3, 1, 3, 0, 0, 4, 0, 0, 0, 0,
+                        0, 3, 0, 4, 0, 1, 0, 0, 3, 0, 0,}));
 
         // --------------------------------------------------------------------------------------------------------------------------
     }
@@ -300,7 +302,9 @@ public class LevelGenerator {
 
         setBitmapParams();
 
-        int t = (int)AppConstants.getGridStep();
+        int tx = (int)AppConstants.getGridStepX();
+        int ty = (int)AppConstants.getGridStepY();
+
         int shiftX = 0, shiftY = 0;
 
         int numBlocksX = AppConstants.getBitmapBank().getNumBlocksX();
@@ -309,11 +313,11 @@ public class LevelGenerator {
 
         for (int i = 0; i < numBlocks; i++) {
             if (i % numBlocksX != 0)
-                shiftX += t;
+                shiftX += tx;
             else
-                shiftX = t / 2;
+                shiftX = tx / 2;
 
-            shiftY = t / 2 + (i / numBlocksX) * t + t;
+            shiftY = ty / 2 + (i / numBlocksX) * ty + ty;
             x[i] = shiftX;
             y[i] = shiftY;
         }
@@ -335,6 +339,8 @@ public class LevelGenerator {
                     block = new Block(BlockType.DESTROYABLE_2, x[i], y[i]);
                 else if (activeBlocks[i] == 3)
                     block = new Block(BlockType.SPRING, x[i], y[i]);
+                else if (activeBlocks[i] == 4)
+                    block = new Block(BlockType.PORTAL, x[i], y[i]);
                 else
                     block = new Block(BlockType.EMPTY, x[i], y[i]);
                 blocks.add(block);
