@@ -224,13 +224,13 @@ public class GameEngine {
             if (b.getDegree() == 0)
                 continue;
 
-            double sy = b.getY() - y;
-            double sx = b.getX() - x;
-            double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
-
             /* portals */
             if (b.getType() == BlockType.PORTAL && b.getDegree() > 0) {
-                if (s < AppConstants.getPlayerH() * 2) {
+                double sy = ((b.getY() + AppConstants.getBlockH()) - (y + AppConstants.getPlayerH()));
+                double sx = ((b.getX() + AppConstants.getBlockW()) - (x + AppConstants.getPlayerW()));
+                double r = sqrt(sx * sx + sy * sy);
+
+                if (r < AppConstants.getPlayerH()) {
                     Block p;
                     if (portal.first == b)
                         p = portal.second;
@@ -248,6 +248,10 @@ public class GameEngine {
                 }
                 continue;
             }
+
+            double sy = b.getY() - y;
+            double sx = b.getX() - x;
+            double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
 
             if (sx <= 1 && sy > 0) {
                 // here is a block to fall down

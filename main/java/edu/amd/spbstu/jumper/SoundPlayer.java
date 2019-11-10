@@ -73,7 +73,7 @@ public class SoundPlayer {
     public void playPortalSound() {
         if (soundPool == null)
             return;
-        soundPool.play(portalSound, volume, volume, 1, 0, 1.0f);
+        soundPool.play(portalSound, volume * 0.6f, volume * 0.6f, 1, 0, 1.0f);
     }
 
 

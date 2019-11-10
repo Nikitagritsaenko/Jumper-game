@@ -225,7 +225,7 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
     @Override
     protected void onStop() {
         soundPlayer.pauseBackSound();
-        AppConstants.getGameEngine().pauseGame();
+        //AppConstants.getGameEngine().pauseGame();
         super.onStop();
     }
 
