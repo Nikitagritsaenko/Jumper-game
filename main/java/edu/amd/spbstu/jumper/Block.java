@@ -10,6 +10,7 @@ public class Block {
     private int x, y, coordX, coordY;
     private int idx;
     private int pos;
+    private int alpha = 255;
     private double initVelocity;
 
     public Block(BlockType type, int x, int y) {
@@ -190,6 +191,14 @@ public class Block {
 
     public void setPos(int pos) {
         this.pos = pos;
+    }
+
+    public int getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(int alpha) {
+        this.alpha = alpha;
     }
 }
 

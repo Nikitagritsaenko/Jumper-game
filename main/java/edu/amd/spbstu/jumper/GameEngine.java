@@ -37,8 +37,8 @@ public class GameEngine {
     private int startIdx, endIdx;
     private int lastBlockIdx = 0;
     private int pos = 0;
-    private double jumpNum = 5.0;
-    private static double delay_sec = 0.9;
+    private double jumpNum = 6.0;
+    private static double delay_sec = 0.01;
     private static double delay = delay_sec;
 
     public String levelText;
@@ -117,24 +117,43 @@ public class GameEngine {
             if (portal_left != 0 && portal_right != 0) {
                 portal = new Pair<>(blocks.get(portal_left), blocks.get(portal_right));
             }
-            if (blocks.get(i).getDegree() > 0)
-                if (blocks.get(i).getType() == BlockType.END) {
-                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX(),
-                            blocks.get(i).getCoordY() - AppConstants.getPlayerH(), null);
-                }
-                else if (blocks.get(i).getType() == BlockType.PORTAL) {
-                    if (portal_left == 0)
-                        portal_left = i;
-                    else
-                        portal_right = i;
+            Block b = blocks.get(i);
+            if (b.getType() == BlockType.EMPTY)
+                continue;
 
+            if (b.getType() == BlockType.END) {
+                canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], b.getCoordX(),
+                        b.getCoordY() - AppConstants.getPlayerH(), null);
+            }
+            else if (b.getType() == BlockType.PORTAL) {
+                if (portal_left == 0)
+                    portal_left = i;
+                else
+                    portal_right = i;
+
+                Paint paint = new Paint();
+                if (b.getDegree() == 0)
+                    b.setAlpha(b.getAlpha() - 20);
+                int alpha = b.getAlpha();
+                if (alpha > 0) {
+                    paint.setAlpha(alpha);
                     canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX() - AppConstants.getBlockH() / 2,
-                            blocks.get(i).getCoordY() - AppConstants.getBlockW() / 2, null);
+                            blocks.get(i).getCoordY() - AppConstants.getBlockW() / 2, paint);
                 }
-                else {
+            }
+            else {
+                Paint paint = new Paint();
+                if (b.getDegree() == 0)
+                    b.setAlpha(b.getAlpha() - 50);
+                int alpha = b.getAlpha();
+                if (alpha > 0) {
+                    paint.setAlpha(b.getAlpha());
                     canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i],
-                            blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), null);
+                            blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), paint);
                 }
+            }
+
+
 
         }
 
@@ -201,13 +220,34 @@ public class GameEngine {
 
         boolean isFallingDown = true;
 
-        for (Block b: blocks) {
+        for (Block b : blocks) {
             if (b.getDegree() == 0)
                 continue;
 
             double sy = b.getY() - y;
             double sx = b.getX() - x;
             double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
+
+            /* portals */
+            if (b.getType() == BlockType.PORTAL && b.getDegree() > 0) {
+                if (s < AppConstants.getPlayerH() * 2) {
+                    Block p;
+                    if (portal.first == b)
+                        p = portal.second;
+                    else
+                        p = portal.first;
+                    player.setX(p.getX());
+                    player.setY(p.getY());
+                    player.setVelocity(0);
+                    soundPlayer.playPortalSound();
+                    portal.first.decreaseDegree();
+                    portal.second.decreaseDegree();
+                    totalMoved = 0.0;
+                    isMovingLeft = false;
+                    isMovingRight = false;
+                }
+                continue;
+            }
 
             if (sx <= 1 && sy > 0) {
                 // here is a block to fall down
@@ -220,38 +260,22 @@ public class GameEngine {
                 totalMoved = 0.0;
                 player.setX(b.getX() - AppConstants.getPlayerW());
                 soundPlayer.playPunchSound();
-                soundPlayer.playFallingSound();
+                //soundPlayer.playFallingSound();
                 delay = delay_sec;
                 gameState = GameStates.GAMEOVER;
-            }
-            else if (sx < -1  && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
+            } else if (sx < -1 && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
                 isMovingLeft = false;
                 totalMoved = 0.0;
                 player.setX(b.getX() + AppConstants.getPlayerW());
                 soundPlayer.playPunchSound();
-                soundPlayer.playFallingSound();
+                //soundPlayer.playFallingSound();
                 delay = delay_sec;
                 gameState = GameStates.GAMEOVER;
             }
             /* check if player land on block */
-            else if (sy >= 0  && s < 0.9 * AppConstants.getPlayerH()) {
+            else if (sy >= 0 && s < 0.9 * AppConstants.getPlayerH()) {
                 player.setVelocity(-b.getInitVelocity());
                 player.setY(player.getY() + player.getVelocity());
-
-                /* portals */
-                if (b.getType() == BlockType.PORTAL) {
-                    Block p;
-                    if (portal.first == b)
-                        p = portal.second;
-                    else
-                        p = portal.first;
-                    player.setX(p.getX());
-                    player.setY(p.getY());
-                    player.setVelocity(0);
-                    portal.first.decreaseDegree();
-                    portal.second.decreaseDegree();
-                    continue;
-                }
 
                 /* springs */
                 if (b.getType() == BlockType.SPRING)
@@ -260,6 +284,7 @@ public class GameEngine {
                     soundPlayer.playJumpSound();
                 hasTouchedBlock = true;
 
+                /* check win condition */
                 int lastBlockIdxTmp = lastBlockIdx;
                 lastBlockIdx = b.getIdx();
                 if (b.getType() == BlockType.END && getBlocksAlive().size() == 2) {
@@ -270,8 +295,7 @@ public class GameEngine {
                 }
                 if (b.getType() != BlockType.DESTROYABLE_2) {
                     b.decreaseDegree();
-                }
-                else {
+                } else {
                     /* double blocks */
                     if (lastBlockIdxTmp == b.getIdx()) {
                         int pos = b.getPos();
@@ -280,27 +304,22 @@ public class GameEngine {
                         if (bitmap.getWidth() < AppConstants.getBlockW()) {
                             AppConstants.getBitmapBank().maximizeBlock(b.getPos());
                             b.increaseDegree();
-                        }
-                        else {
+                        } else {
                             AppConstants.getBitmapBank().minimizeBlock(b.getPos());
                             b.decreaseDegree();
                         }
-                    }
-                    else {
+                    } else {
                         AppConstants.getBitmapBank().minimizeBlock(b.getPos());
                         b.decreaseDegree();
                     }
                 }
-            }
-            else if (sx <= 1 && sy < 0 && s < 0.7 * AppConstants.getPlayerH()) {
+            } else if (sx <= 1 && sy < 0 && s < 0.7 * AppConstants.getPlayerH()) {
+                /* check crush to ceil */
                 player.setVelocity(0);
                 player.setY(b.getY() + AppConstants.getBlockH());
             }
         }
 
-        if (isFallingDown && !isMovingRight && !isMovingLeft && !hasTouchedBlock) {
-            gameState = GameStates.GAMEOVER;
-        }
     }
 
     private void makeJump(Block curr_block, Block next_block) {
@@ -407,6 +426,10 @@ public class GameEngine {
 
     public void restartGame() {
         AppConstants.getSoundPlayer().resumeBackSound();
+
+        portal = null;
+        AppConstants.getBitmapBank().portalIdxs = null;
+        AppConstants.getBitmapBank().portalIdxs = new ArrayList<>();
 
         blocks = lg.generateBlocks(AppConstants.getCurrLevel());
         blockTypes.clear();

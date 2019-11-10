@@ -23,7 +23,7 @@ public class BitmapBank {
     private Bitmap soundOn;
     private Bitmap soundOff;
     private Bitmap portal;
-    private ArrayList<Integer> portalIdxs = new ArrayList<>();
+    public ArrayList<Integer> portalIdxs = new ArrayList<>();
     private Bitmap b, b_special, b_double, b_finish, b_spring;
 
     private int stepX, stepY;

@@ -21,6 +21,7 @@ public class SoundPlayer {
     private static int fallingSound;
     private static int punchSound;
     private static int winSound;
+    private static int portalSound;
 
     private boolean isBackSoundPlaying;
 
@@ -50,6 +51,7 @@ public class SoundPlayer {
         punchSound = soundPool.load(context, R.raw.punch, 1);
         winSound = soundPool.load(context, R.raw.level_winner, 1);
         springSound = soundPool.load(context, R.raw.spring, 1);
+        portalSound = soundPool.load(context, R.raw.portal, 1);
 
         mediaPlayer = MediaPlayer.create(context, R.raw.menu_music);
         mediaPlayer.setLooping(true);
@@ -68,6 +70,12 @@ public class SoundPlayer {
             return;
         soundPool.play(springSound, volume, volume, 1, 0, 1.0f);
     }
+    public void playPortalSound() {
+        if (soundPool == null)
+            return;
+        soundPool.play(portalSound, volume, volume, 1, 0, 1.0f);
+    }
+
 
     public void playClickSound() {
         if (soundPool == null)
