@@ -52,7 +52,8 @@ public class Level extends AppCompatActivity implements GestureDetector.OnGestur
 
         // fullscreen mode
         Window w = getWindow();
-        //w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         soundPlayer = AppConstants.getSoundPlayer();
         soundPlayer.playBackSound();

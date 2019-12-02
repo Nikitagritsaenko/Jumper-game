@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         AppConstants.setScreenHeight(metrics.heightPixels);
         AppConstants.setScreenWidth(metrics.widthPixels);
 
-        AppConstants.initialization(this.getApplicationContext());
+        AppConstants.initialization(MyApp.getContext());
 
         // fullscreen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

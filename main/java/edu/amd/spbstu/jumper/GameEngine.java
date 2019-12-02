@@ -121,7 +121,8 @@ public class GameEngine {
             if (b.getType() == BlockType.EMPTY)
                 continue;
 
-            if (b.getType() == BlockType.END) {
+            String mode = AppConstants.getBitmapBank().getMode();
+            if (b.getType() == BlockType.END && mode != "china_") {
                 canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], b.getCoordX(),
                         b.getCoordY() - AppConstants.getPlayerH(), null);
             }

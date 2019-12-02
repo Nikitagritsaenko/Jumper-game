@@ -1,9 +1,13 @@
 package edu.amd.spbstu.jumper;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +15,7 @@ import java.util.List;
 
 public class BitmapBank {
     Resources resources;
-
+    private String mode = "china_";
     private Bitmap background;
     private Bitmap player;
     private Bitmap[] blocks;
@@ -50,6 +54,32 @@ public class BitmapBank {
         isBlockMinimized[i] = false;
     }
 
+    public static Bitmap getBitmap(String name) {
+        Context context = MyApp.getContext();
+        int resourceId = context.getResources().getIdentifier(name, "drawable", MyApp.getContext().getPackageName());
+        Drawable drawable = context.getResources().getDrawable(resourceId);
+        
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
     public void minimizeBlock(int i) {
         if (isBlockMinimized[i])
             return;
@@ -70,7 +100,8 @@ public class BitmapBank {
     }
 
     public void scalePlayer(double scale) {
-        player = BitmapFactory.decodeResource(resources, R.drawable.penguine);
+        player = getBitmap(mode + "player");
+        
         player = Bitmap.createScaledBitmap(player, (int)scale, (int)scale, false);
         AppConstants.setPlayerW(player.getWidth());
         AppConstants.setPlayerH(player.getHeight());
@@ -123,7 +154,12 @@ public class BitmapBank {
 
 
             blocks[numBlocks - 1] = b_finish;
-            blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight() * 2);
+            if (mode != "china_") {
+                blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight() * 2);
+            }
+            else {
+                blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight());
+            }
 
             AppConstants.setBlockH(blocks[0].getHeight());
             AppConstants.setBlockW(blocks[0].getWidth());
@@ -157,16 +193,16 @@ public class BitmapBank {
         exit = BitmapFactory.decodeResource(res, R.drawable.exit, options_game_buttons);
         exit = setImageSize(exit, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
 
-        background = BitmapFactory.decodeResource(res, R.drawable.background2, options_game_background);
+        background = getBitmap(mode + "background");
         background = scaleImage(background);
-        player = BitmapFactory.decodeResource(res, R.drawable.penguine, options_game_objects);
-        b = BitmapFactory.decodeResource(res, R.drawable.ice_cube, options_game_objects);
-        b_special = BitmapFactory.decodeResource(res, R.drawable.ice_cube_special, options_game_objects);
-        b_double = BitmapFactory.decodeResource(res, R.drawable.ice_cube_double, options_game_objects);
-        b_finish = BitmapFactory.decodeResource(res, R.drawable.ice_cube_finish, options_game_objects);
-        b_spring = BitmapFactory.decodeResource(res, R.drawable.ice_cube_spring, options_game_objects);
+        player = getBitmap(mode + "player");
+        b = getBitmap(mode + "block");
+        b_special = getBitmap(mode + "block_special");
+        b_double = getBitmap(mode + "block_double");
+        b_finish = getBitmap(mode + "block_finish");
+        b_spring = getBitmap(mode + "block_spring");
 
-        portal = BitmapFactory.decodeResource(res, R.drawable.portal, options_game_buttons);
+        portal = getBitmap(mode + "portal");
 
         AppConstants.exitH = exit.getHeight();
         AppConstants.exitW = exit.getWidth();
@@ -268,6 +304,10 @@ public class BitmapBank {
 
     public void setNumBlocks(int numBlocks) {
         this.numBlocks = numBlocks;
+    }
+
+    public String getMode() {
+        return mode;
     }
 }
 
