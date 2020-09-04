@@ -1,4 +1,4 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import android.app.Application;
 import android.content.Context;

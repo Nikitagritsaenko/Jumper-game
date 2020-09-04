@@ -1,4 +1,4 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import android.content.Context;
 import android.media.AudioAttributes;
@@ -7,10 +7,9 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 
-public class SoundPlayer {
+import jumper.R;
 
-    private AudioAttributes audioAttributes;
-    final int SOUND_POOL_MAX = 2;
+class SoundPlayer {
 
     private static MediaPlayer mediaPlayer;
     private static SoundPool soundPool;
@@ -25,12 +24,14 @@ public class SoundPlayer {
 
     private boolean isBackSoundPlaying;
 
-    public SoundPlayer(Context context) {
+    SoundPlayer(Context context) {
 
         // SoundPool is deprecated in API level 21. (Lollipop)
+        int SOUND_POOL_MAX = 2;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            audioAttributes = new AudioAttributes.Builder()
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
@@ -40,10 +41,10 @@ public class SoundPlayer {
                     .setMaxStreams(SOUND_POOL_MAX)
                     .build();
 
-        } else {
+        }
+        else {
             soundPool = new SoundPool(SOUND_POOL_MAX, AudioManager.STREAM_MUSIC, 0);
         }
-
 
         jumpSound = soundPool.load(context, R.raw.jump, 1);
         clickSound = soundPool.load(context, R.raw.click, 1);
@@ -56,119 +57,138 @@ public class SoundPlayer {
         mediaPlayer = MediaPlayer.create(context, R.raw.menu_music);
         mediaPlayer.setLooping(true);
         isBackSoundPlaying = false;
-
     }
 
-    public void playJumpSound() {
-        if (soundPool == null)
+    void playJumpSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         soundPool.play(jumpSound, volume, volume, 1, 0, 1.0f);
     }
 
-    public void playSpringSound() {
-        if (soundPool == null)
+    void playSpringSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         soundPool.play(springSound, volume, volume, 1, 0, 1.0f);
     }
-    public void playPortalSound() {
-        if (soundPool == null)
+
+    void playPortalSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         soundPool.play(portalSound, volume * 0.6f, volume * 0.6f, 1, 0, 1.0f);
     }
 
 
-    public void playClickSound() {
-        if (soundPool == null)
+    void playClickSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         soundPool.play(clickSound, volume, volume, 1, 0, 1.0f);
     }
 
-    public void playFallingSound() {
-        if (soundPool == null)
+    void playFallingSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         soundPool.play(fallingSound, volume * 0.5f, volume * 0.5f, 1, 0, 1.0f);
     }
 
-    public void playPunchSound() {
-        if (soundPool == null)
+    void playPunchSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         soundPool.play(punchSound, volume, volume, 1, 0, 1.0f);
     }
 
-    public void playWinSound() {
-        if (soundPool == null)
+    void playWinSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         soundPool.play(winSound, volume * 0.75f, volume * 0.75f, 1, 0, 1.0f);
     }
 
 
-    public void playBackSound() {
-        if (soundPool == null)
-            return;
-        if (!isBackSoundPlaying) {
-            System.out.println("PLAY");
+    void playBackSound() {
 
+        if (soundPool == null) {
+            return;
+        }
+
+        if (!isBackSoundPlaying) {
             mediaPlayer.start();
             mediaPlayer.setLooping(true);
             isBackSoundPlaying = true;
         }
     }
 
-    public void stopBackSound() {
-        if (soundPool == null)
+    void stopBackSound() {
+
+        if (soundPool == null) {
             return;
+        }
+
         if (isBackSoundPlaying) {
-            System.out.println("STOP");
             mediaPlayer.stop();
             isBackSoundPlaying = false;
         }
     }
 
-    public void resumeBackSound() {
-        if (soundPool == null)
-            return;
-        if (!isBackSoundPlaying) {
-            System.out.println("RESUME");
+    void resumeBackSound() {
 
+        if (soundPool == null) {
+            return;
+        }
+
+        if (!isBackSoundPlaying) {
             mediaPlayer.start();
             isBackSoundPlaying = true;
         }
     }
 
-    public void pauseBackSound() {
-        if (soundPool == null)
-            return;
-        if (isBackSoundPlaying) {
-            System.out.println("PAUSE");
+    void pauseBackSound() {
 
+        if (soundPool == null) {
+            return;
+        }
+
+        if (isBackSoundPlaying) {
             mediaPlayer.pause();
             isBackSoundPlaying = false;
         }
     }
 
-    public void soundOff() {
-        if (mediaPlayer == null)
+    void soundOff() {
+
+        if (mediaPlayer == null) {
             return;
+        }
+
         volume = 0f;
         mediaPlayer.setVolume(0f, 0f);
     }
 
-    public void soundOn() {
-        if (mediaPlayer == null)
+    void soundOn() {
+
+        if (mediaPlayer == null) {
             return;
+        }
         volume = 1f;
         mediaPlayer.setVolume(1f, 1f);
     }
-
-    public void release() {
-        if (soundPool != null) {
-            soundPool.release();
-            soundPool = null;
-        }
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
-
 }

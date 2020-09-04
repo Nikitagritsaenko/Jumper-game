@@ -1,4 +1,4 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import android.content.Context;
 import android.view.SurfaceHolder;
@@ -15,6 +15,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+
         if (!gameThread.isRunning()) {
             gameThread = new GameThread(holder);
         }
@@ -28,8 +29,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+
         if (gameThread.isRunning()) {
-            gameThread.setIsRunning(false);
+            gameThread.setRunning(false);
             boolean retry = true;
             while (retry) {
                 try {
@@ -37,7 +39,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     retry = false;
                 }
                 catch (InterruptedException e) {
-
+                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -45,14 +47,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     void initView() {
+
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
         setFocusable(true);
         gameThread = new GameThread(holder);
-    }
-
-
-    public GameThread getGameThread() {
-        return gameThread;
     }
 }

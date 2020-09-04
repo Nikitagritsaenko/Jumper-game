@@ -1,10 +1,11 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 
 import androidx.core.util.Pair;
@@ -12,173 +13,257 @@ import androidx.core.util.Pair;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import jumper.R;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class GameEngine {
+
+    private static final double DELAY_SEC = 0.01;
+
     private BackgroundImage backgroundImage;
     private ArrayList<Block> blocks;
     private ArrayList<BlockType> blockTypes = new ArrayList<>();
-    private ArrayList<Block> currBlocks;
     private Pair<Block, Block> portal = null;
-    private LevelGenerator lg = new LevelGenerator();
-    private HamiltonianCycle hc;
-    private GameStates gameState = GameStates.NOT_STARTED;
-    private static Player player = new Player();
+    private LevelGenerator levelGenerator = new LevelGenerator();
+    private GameState gameState = GameState.NOT_STARTED;
+    private Player player = new Player();
     private SoundPlayer soundPlayer = AppConstants.getSoundPlayer();
+
     private static boolean isMovingLeft = false;
     private static boolean isMovingRight = false;
     private static boolean isSoundOn = true;
     private double totalMoved = 0.0;
     private double jumpStep;
     private static boolean hasTouchedBlock = false;
-    private boolean isAutoPlay = false;
-    private int[] path;
     private int startIdx, endIdx;
     private int lastBlockIdx = 0;
-    private int pos = 0;
     private double jumpNum = 6.0;
-    private static double delay_sec = 0.01;
-    private static double delay = delay_sec;
+    private static double delay = DELAY_SEC;
+    private String levelText;
+    private Paint levelPainter = new Paint();
 
-    public String levelText;
-    public Paint levelPainter = new Paint();
     public Context context;
 
-    public static void setMovingLeft(boolean movingLeft) {
+    static void setMovingLeft(boolean movingLeft) {
+
         if (hasTouchedBlock) {
             isMovingLeft = movingLeft;
             hasTouchedBlock = false;
         }
     }
 
-    public static void setMovingRight(boolean movingRight) {
+    static void setMovingRight(boolean movingRight) {
+
         if (hasTouchedBlock) {
             isMovingRight = movingRight;
             hasTouchedBlock = false;
         }
     }
 
-    public GameEngine(Context context) {
+    GameEngine(Context context) {
+
         this.context = context;
         levelText = context.getString(R.string.level);
         levelPainter.setColor(context.getResources().getColor(R.color.text_black));
         levelPainter.setAntiAlias(true);
         levelPainter.setStyle(Paint.Style.FILL);
         String strLang = Locale.getDefault().getDisplayLanguage();
+
         float size;
-        if (strLang.equalsIgnoreCase("english"))
+        if (strLang.equalsIgnoreCase("english")) {
             size = AppConstants.getExitW() / 2;
-        else
+        }
+        else {
             size = AppConstants.getExitW() / 2.5f;
+        }
         levelPainter.setTextSize(size);
         levelPainter.setTextAlign(Paint.Align.CENTER);
 
         saveUserProgress();
     }
 
-    public void updateAndDrawBackgroundImage(Canvas canvas) {
-        String text = levelText;
-        text += " ";
-        text += Integer.toString(AppConstants.getCurrLevel());
-        text += " / ";
-        text += Integer.toString(AppConstants.getNumLevels());
+    void updateAndDrawBackgroundImage(Canvas canvas) {
 
-        canvas.drawBitmap(AppConstants.getBitmapBank().getBackground(), backgroundImage.getX(), backgroundImage.getY(), null);
-        canvas.drawBitmap(AppConstants.getBitmapBank().getRestart(), AppConstants.restartX, AppConstants.restartY, null);
-        canvas.drawBitmap(AppConstants.getBitmapBank().getExit(), AppConstants.exitX, AppConstants.exitY, null);
-        canvas.drawText(text,  AppConstants.getExitX() + AppConstants.getExitW() * 2.4f,
-                AppConstants.getExitY() + AppConstants.getExitH() / 2, levelPainter);
+        canvas.drawBitmap(
+                AppConstants.getBitmapBank().getBackground(),
+                backgroundImage.getX(),
+                backgroundImage.getY(),
+                null
+        );
 
-        if (gameState != GameStates.PAUSED)
-            canvas.drawBitmap(AppConstants.getBitmapBank().getPause(), AppConstants.pauseX, AppConstants.pauseY, null);
-        else
-            canvas.drawBitmap(AppConstants.getBitmapBank().getPlay(), AppConstants.pauseX, AppConstants.pauseY, null);
+        canvas.drawBitmap(
+                AppConstants.getBitmapBank().getRestart(),
+                AppConstants.restartX,
+                AppConstants.restartY,
+                null
+        );
 
-        if (isSoundOn)
-            canvas.drawBitmap(AppConstants.getBitmapBank().getSoundOn(), AppConstants.soundX, AppConstants.soundY, null);
-        else
-            canvas.drawBitmap(AppConstants.getBitmapBank().getSoundOff(), AppConstants.soundX, AppConstants.soundY, null);
+        canvas.drawBitmap(AppConstants.getBitmapBank().getExit(),
+                AppConstants.exitX,
+                AppConstants.exitY,
+                null
+        );
+
+        String text = levelText + " " +
+                AppConstants.getCurrLevel() +
+                " / " +
+                AppConstants.getNumLevels();
+
+        canvas.drawText(
+                text,
+                AppConstants.getExitX() + AppConstants.getExitW() * 2.4f,
+                AppConstants.getExitY() + AppConstants.getExitH() / 2,
+                levelPainter
+        );
+
+        if (gameState != GameState.PAUSED) {
+            canvas.drawBitmap(
+                    AppConstants.getBitmapBank().getPause(),
+                    AppConstants.pauseX,
+                    AppConstants.pauseY,
+                    null
+            );
+        }
+        else {
+            canvas.drawBitmap(
+                    AppConstants.getBitmapBank().getPlay(),
+                    AppConstants.pauseX,
+                    AppConstants.pauseY,
+                    null
+            );
+        }
+
+        if (isSoundOn) {
+            canvas.drawBitmap(
+                    AppConstants.getBitmapBank().getSoundOn(),
+                    AppConstants.soundX,
+                    AppConstants.soundY,
+                    null
+            );
+        }
+        else {
+            canvas.drawBitmap(
+                    AppConstants.getBitmapBank().getSoundOff(),
+                    AppConstants.soundX,
+                    AppConstants.soundY,
+                    null
+            );
+        }
     }
 
-    public void updateBlocks(Canvas canvas) {
-        if (blockTypes == null)
+    void updateBlocks(Canvas canvas) {
+
+        if (blockTypes == null) {
             return;
+        }
 
         int len = AppConstants.getBitmapBank().getBlocksNum();
+
         if (AppConstants.getBitmapBank().getBlocks().length != len) {
             AppConstants.getBitmapBank().setBlocks(null);
             AppConstants.getBitmapBank().initBlocks(blockTypes);
         }
 
-        int portal_left = 0, portal_right = 0;
+        int portalLeft = 0, portalRight = 0;
 
         for (int i = 0; i < len; i++) {
-            if (portal_left != 0 && portal_right != 0) {
-                portal = new Pair<>(blocks.get(portal_left), blocks.get(portal_right));
-            }
-            Block b = blocks.get(i);
-            if (b.getType() == BlockType.EMPTY)
-                continue;
 
-            String mode = AppConstants.getBitmapBank().getMode();
-            if (b.getType() == BlockType.END && mode != "china_") {
-                canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], b.getCoordX(),
-                        b.getCoordY() - AppConstants.getPlayerH(), null);
+            if (portalLeft != 0 && portalRight != 0) {
+                portal = new Pair<>(blocks.get(portalLeft), blocks.get(portalRight));
+            }
+
+            Block b = blocks.get(i);
+            if (b.getType() == BlockType.EMPTY) {
+                continue;
+            }
+
+            if (b.getType() == BlockType.END) {
+                canvas.drawBitmap(
+                        AppConstants.getBitmapBank().getBlocks()[i],
+                        b.getX(),
+                        b.getY() - AppConstants.getPlayerH(),
+                        null
+                );
             }
             else if (b.getType() == BlockType.PORTAL) {
-                if (portal_left == 0)
-                    portal_left = i;
-                else
-                    portal_right = i;
+                if (portalLeft == 0) {
+                    portalLeft = i;
+                }
+                else {
+                    portalRight = i;
+                }
 
                 Paint paint = new Paint();
-                if (b.getDegree() == 0)
-                    b.setAlpha(b.getAlpha() - 20);
+                if (b.getDegree() == 0) {
+                    b.setAlpha(b.getAlpha() - AppConstants.PORTAL_DISCOLORATION_SPEED);
+                }
+
                 int alpha = b.getAlpha();
+
                 if (alpha > 0) {
                     paint.setAlpha(alpha);
-                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i], blocks.get(i).getCoordX() - AppConstants.getBlockH() / 2,
-                            blocks.get(i).getCoordY() - AppConstants.getBlockW() / 2, paint);
+
+                    canvas.drawBitmap(
+                            AppConstants.getBitmapBank().getBlocks()[i],
+                            blocks.get(i).getX() - AppConstants.getBlockH() / 2,
+                            blocks.get(i).getY() - AppConstants.getBlockW() / 2,
+                            paint
+                    );
                 }
             }
             else {
                 Paint paint = new Paint();
-                if (b.getDegree() == 0)
-                    b.setAlpha(b.getAlpha() - 50);
+                if (b.getDegree() == 0) {
+                    b.setAlpha(b.getAlpha() - AppConstants.BLOCK_DISCOLORATION_SPEED);
+                }
+
                 int alpha = b.getAlpha();
+
                 if (alpha > 0) {
                     paint.setAlpha(b.getAlpha());
-                    canvas.drawBitmap(AppConstants.getBitmapBank().getBlocks()[i],
-                            blocks.get(i).getCoordX(), blocks.get(i).getCoordY(), paint);
+
+                    int shiftX = 0;
+
+                    if (b.getType() == BlockType.DESTROYABLE_2 && b.getDegree() != 2) {
+                        // centering the position of the double block when it's small
+                        shiftX = (int)(AppConstants.getBlockW() * (1.0 - AppConstants.SQUEEZE_BLOCK_COEFFICIENT) / 2);
+                    }
+
+                    canvas.drawBitmap(
+                            AppConstants.getBitmapBank().getBlocks()[i],
+                            blocks.get(i).getX() + shiftX,
+                            blocks.get(i).getY(),
+                            paint
+                    );
                 }
             }
-
-
-
         }
-
     }
 
-    public void updateAndDrawPlayer(Canvas canvas) {
+    void updateAndDrawPlayer(Canvas canvas) {
+
         if (delay >= 0) {
             delay -= 1.0 / 60.0;
         }
-        if (isAutoPlay)
-            jumpNum = 2.0;
-        else
-            jumpNum = 5.0;
+
+        jumpNum = 5.0;
+
         jumpStep = AppConstants.getGridStepX() / jumpNum;
 
-        if (gameState != GameStates.PAUSED) {
+        if (gameState != GameState.PAUSED) {
+
             player.setVelocity(player.getVelocity() + AppConstants.getGravity());
             player.setY(player.getY() + player.getVelocity());
-            if (gameState != GameStates.GAMEOVER) {
+
+            if (gameState != GameState.GAME_OVER) {
                 if (isMovingRight) {
                     if (totalMoved >= AppConstants.getGridStepX() / jumpStep) {
                         isMovingRight = false;
                         totalMoved = 0.0;
-                    } else {
+                    }
+                    else {
                         player.setX(player.getX() + jumpStep);
                         totalMoved++;
                     }
@@ -188,17 +273,28 @@ public class GameEngine {
                     if (totalMoved >= AppConstants.getGridStepX() / jumpStep) {
                         isMovingLeft = false;
                         totalMoved = 0.0;
-                    } else {
+                    }
+                    else {
                         player.setX(player.getX() - jumpStep);
                         totalMoved++;
                     }
                 }
             }
+            else {
+                AppConstants.getBitmapBank().rotatePlayer(10f);
+            }
         }
-        canvas.drawBitmap(AppConstants.getBitmapBank().getPlayer(), (int)player.getX(), (int)player.getY(), null);
+
+        canvas.drawBitmap(
+                AppConstants.getBitmapBank().getPlayer(),
+                (int)player.getX(),
+                (int)player.getY(),
+                null
+        );
     }
 
-    public void updateCollision() {
+    void updateCollision() {
+
         if (player.getY() < 0) {
             player.setY(0);
             player.setVelocity(0);
@@ -212,18 +308,17 @@ public class GameEngine {
             }
         }
 
-        if (gameState == GameStates.PAUSED) {
+        if (gameState == GameState.PAUSED) {
             return;
         }
 
         double x = player.getX();
         double y = player.getY();
 
-        boolean isFallingDown = true;
-
         for (Block b : blocks) {
-            if (b.getDegree() == 0)
+            if (b.getDegree() == 0) {
                 continue;
+            }
 
             /* portals */
             if (b.getType() == BlockType.PORTAL && b.getDegree() > 0) {
@@ -232,11 +327,15 @@ public class GameEngine {
                 double r = sqrt(sx * sx + sy * sy);
 
                 if (r < AppConstants.getPlayerH()) {
+                    
                     Block p;
-                    if (portal.first == b)
+                    if (portal.first == b) {
                         p = portal.second;
-                    else
+                    }
+                    else {
                         p = portal.first;
+                    }
+                    
                     player.setX(p.getX());
                     player.setY(p.getY());
                     player.setVelocity(0);
@@ -247,17 +346,13 @@ public class GameEngine {
                     isMovingLeft = false;
                     isMovingRight = false;
                 }
+
                 continue;
             }
 
             double sy = b.getY() - y;
             double sx = b.getX() - x;
             double s = sqrt(sx * sx + sy * sy); // distance between player's top left and block top left
-
-            if (sx <= 1 && sy > 0) {
-                // here is a block to fall down
-                isFallingDown = false;
-            }
 
             /* Check if player crushed */
             if (sx > 1 && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
@@ -266,16 +361,17 @@ public class GameEngine {
                 player.setX(b.getX() - AppConstants.getPlayerW());
                 soundPlayer.playPunchSound();
                 //soundPlayer.playFallingSound();
-                delay = delay_sec;
-                gameState = GameStates.GAMEOVER;
-            } else if (sx < -1 && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
+                delay = DELAY_SEC;
+                gameState = GameState.GAME_OVER;
+            }
+            else if (sx < -1 && s < AppConstants.getPlayerW() && abs(sy) < 0.7 * AppConstants.getBlockH()) {
                 isMovingLeft = false;
                 totalMoved = 0.0;
                 player.setX(b.getX() + AppConstants.getPlayerW());
                 soundPlayer.playPunchSound();
                 //soundPlayer.playFallingSound();
-                delay = delay_sec;
-                gameState = GameStates.GAMEOVER;
+                delay = DELAY_SEC;
+                gameState = GameState.GAME_OVER;
             }
             /* check if player land on block */
             else if (sy >= 0 && s < 0.9 * AppConstants.getPlayerH()) {
@@ -283,24 +379,27 @@ public class GameEngine {
                 player.setY(player.getY() + player.getVelocity());
 
                 /* springs */
-                if (b.getType() == BlockType.SPRING)
+                if (b.getType() == BlockType.SPRING) {
                     soundPlayer.playSpringSound();
-                else
+                }
+                else {
                     soundPlayer.playJumpSound();
+                }
                 hasTouchedBlock = true;
 
                 /* check win condition */
                 int lastBlockIdxTmp = lastBlockIdx;
                 lastBlockIdx = b.getIdx();
                 if (b.getType() == BlockType.END && getBlocksAlive().size() == 2) {
-                    isAutoPlay = false;
                     player.setY(b.getY() - AppConstants.getPlayerH());
                     soundPlayer.playWinSound();
                     loadNextLevel();
                 }
+
                 if (b.getType() != BlockType.DESTROYABLE_2) {
                     b.decreaseDegree();
-                } else {
+                }
+                else {
                     /* double blocks */
                     if (lastBlockIdxTmp == b.getIdx()) {
                         int pos = b.getPos();
@@ -327,74 +426,13 @@ public class GameEngine {
 
     }
 
-    private void makeJump(Block curr_block, Block next_block) {
-        int dist = Block.dist(currBlocks, curr_block, next_block);
-        if (curr_block.getX() == next_block.getX()) {
-            return;
-        }
+    private void saveUserProgress() {
 
-        if (dist == 1)
-            player.moveRight();
-        else if (dist == -1)
-            player.moveLeft();
-    }
-
-    public void updateAutoPlaying() {
-        // NO AUTOPLAY
-        isAutoPlay = false;
-        return;
-        /*if (!isAutoPlay || isMovingRight || isMovingLeft || !hasTouchedBlock)
-            return;
-
-        if (pos + 1 >= path.length) {
-            isAutoPlay = false;
-            return;
-        }
-
-        if (path[pos] == -1) {
-            isAutoPlay = false;
-            return;
-        }
-
-        int curr_idx = path[pos];
-        Block curr_block = currBlocks.get(curr_idx);
-        int next_idx = path[pos + 1];
-        Block next_block;
-
-        if (lastBlockIdx != curr_block.getIdx()) {
-            return;
-        }
-
-        if (next_idx == -1) {
-            isAutoPlay = false;
-            return;
-        }
-        next_block = currBlocks.get(next_idx);
-
-        if (curr_block.getY() > next_block.getY()) {
-            // jump up
-            System.out.println("J UP");
-            if (player.getVelocity() < 0 && player.getY() + AppConstants.getPlayerH() <= next_block.getY()) {
-                makeJump(curr_block, next_block);
-                pos++;
-            }
-        }
-        else {
-            // jump down
-            System.out.println("J DOWN");
-
-            if (player.getVelocity() > 0 && player.getY() + 2 * AppConstants.getPlayerH() >= curr_block.getY()) {
-                makeJump(curr_block, next_block);
-                pos++;
-            }
-        }*/
-    }
-
-    public void saveUserProgress() {
         int level = loadUserProgress();
 
-        if (level >= AppConstants.getCurrLevel())
+        if (level >= AppConstants.getCurrLevel()) {
             return;
+        }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -402,9 +440,9 @@ public class GameEngine {
         editor.apply();
     }
 
-    public int loadUserProgress() {
+    int loadUserProgress() {
         // TEMPORARY!
-        return 40;
+        return AppConstants.getNumLevels();
 
         /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         int curr_level_progress = preferences.getInt("Level", -1);
@@ -414,29 +452,33 @@ public class GameEngine {
     }
 
 
-    public void loadNextLevel() {
+    private void loadNextLevel() {
 
         AppConstants.setCurrLevel(AppConstants.getCurrLevel() + 1);
         saveUserProgress();
         restartGame();
     }
 
-    public Block getBlockByIndex(int index) {
+    private Block getBlockByIndex(int index) {
+
         for (Block b: blocks) {
-            if (b.getIdx() == index)
+            if (b.getIdx() == index) {
                 return b;
+            }
         }
+
         return null;
     }
 
-    public void restartGame() {
+    void restartGame() {
+
         AppConstants.getSoundPlayer().resumeBackSound();
 
         portal = null;
-        AppConstants.getBitmapBank().portalIdxs = null;
-        AppConstants.getBitmapBank().portalIdxs = new ArrayList<>();
+        AppConstants.getBitmapBank().portalIndices = null;
+        AppConstants.getBitmapBank().portalIndices = new ArrayList<>();
 
-        blocks = lg.generateBlocks(AppConstants.getCurrLevel());
+        blocks = levelGenerator.generateBlocks(AppConstants.getCurrLevel());
         blockTypes.clear();
         blockTypes = new ArrayList<>();
         for (Block b: blocks) {
@@ -456,47 +498,39 @@ public class GameEngine {
         }
 
         player.setX(blocks.get(0).getX());
-        player.setY(blocks.get(0).getY() - (int)(AppConstants.getBlockH() * 0.8) - AppConstants.getGridStepX());
+        player.setY(blocks.get(0).getY() - AppConstants.getGridStepY());
 
         player.setVelocity(0.0);
         isMovingLeft = false;
         isMovingRight = false;
         totalMoved = 0.0;
         hasTouchedBlock = false;
-        gameState = GameStates.PLAYING;
+        gameState = GameState.PLAYING;
         lastBlockIdx = 0;
-        pos = 0;
-        isAutoPlay = false;
-        delay = delay_sec;
-
-        if (hc == null) {
-            hc = new HamiltonianCycle();
-        }
+        delay = DELAY_SEC;
     }
 
-    public void pauseGame() {
+    void pauseGame() {
+
         soundPlayer.pauseBackSound();
-        gameState = GameStates.PAUSED;
+        gameState = GameState.PAUSED;
     }
 
-    public void resumeGame() {
+    void resumeGame() {
+
         soundPlayer.resumeBackSound();
-        gameState = GameStates.PLAYING;
+        gameState = GameState.PLAYING;
     }
 
-    public Player getPlayer() {
+    Player getPlayer() {
         return player;
     }
 
-    public GameStates getGameState() {
+    GameState getGameState() {
         return gameState;
     }
 
-    public ArrayList<Block> getBlocks() {
-        return blocks;
-    }
-
-    public ArrayList<Block> getBlocksAlive() {
+    ArrayList<Block> getBlocksAlive() {
 
         ArrayList<Block> blocksAlive = new ArrayList<>();
 
@@ -512,8 +546,9 @@ public class GameEngine {
         }
 
         for (Block b: blocks) {
-            if (b.getIdx() == lastBlockIdx || b.getIdx() == endIdx || b.getType() == BlockType.PORTAL)
+            if (b.getIdx() == lastBlockIdx || b.getIdx() == endIdx || b.getType() == BlockType.PORTAL) {
                 continue;
+            }
 
             if (b.getDegree() > 0 && b.getType() != BlockType.START) {
                 blocksAlive.add(b);
@@ -521,63 +556,36 @@ public class GameEngine {
                     blocksAlive.add(b);
             }
         }
-        blocksAlive.add(blocksAlive.size(), blocks.get(blocks.size()-1));
 
-        currBlocks = blocksAlive;
+        blocksAlive.add(blocksAlive.size(), blocks.get(blocks.size() - 1));
+
         return blocksAlive;
     }
 
-    public boolean IsSoundOn() {
+    boolean IsSoundOn() {
         return isSoundOn;
     }
 
-    public void setSoundOn(boolean isSoundOn) {
+    void setSoundOn(boolean isSoundOn) {
         GameEngine.isSoundOn = isSoundOn;
     }
 
-    public int[] getPath() {
-        return path;
-    }
-
-    public void setIsAutoPlay(boolean isAutoPlay) {
-        this.isAutoPlay = isAutoPlay;
-    }
-
-    public void setPath(int[] path) {
-        this.path = path;
-    }
-
-    public int getLastBlockIdx() {
-        return lastBlockIdx;
-    }
-
-    public void setStartIdx(int startIdx) {
+    void setStartIdx(int startIdx) {
         this.startIdx = startIdx;
-        if (lastBlockIdx == 0)
+        if (lastBlockIdx == 0) {
             lastBlockIdx = startIdx;
+        }
     }
 
-    public void setEndIdx(int endIdx) {
+    void setEndIdx(int endIdx) {
         this.endIdx = endIdx;
     }
 
-    public int getStartIdx() {
+    int getStartIdx() {
         return startIdx;
     }
 
-    public int getEndIdx() {
+    int getEndIdx() {
         return endIdx;
-    }
-
-    public boolean isAutoPlay() {
-        return isAutoPlay;
-    }
-
-    public HamiltonianCycle getHc() {
-        return hc;
-    }
-
-    public ArrayList<BlockType> getBlockTypes() {
-        return blockTypes;
     }
 }

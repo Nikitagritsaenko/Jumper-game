@@ -1,13 +1,13 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
-public class LevelData {
+class LevelData {
     private int lvlIdx;
     private int numX;
     private int numY;
     private int startIdx, endIdx;
     private int[] indices;
 
-    public LevelData(int lvlIdx, int startIdx, int endIdx, int numX, int numY, int[] indices) {
+    LevelData(int lvlIdx, int startIdx, int endIdx, int numX, int numY, int[] indices) {
         this.lvlIdx = lvlIdx;
         this.numX = numX;
         this.numY = numY;
@@ -16,27 +16,23 @@ public class LevelData {
         this.indices = indices;
     }
 
-    public int getLvlIdx() {
-        return lvlIdx;
-    }
-
-    public int getNumX() {
+    int getNumX() {
         return numX;
     }
 
-    public int getNumY() {
+    int getNumY() {
         return numY;
     }
 
-    public int[] getIndices() {
+    int[] getIndices() {
         return indices;
     }
 
-    public int getStartIdx() {
+    int getStartIdx() {
         return startIdx;
     }
 
-    public int getEndIdx() {
+    int getEndIdx() {
         return endIdx;
     }
 }

@@ -1,4 +1,4 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -6,20 +6,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import jumper.R;
 
-public class BitmapBank {
-    Resources resources;
-    private String mode = "china_";
+class BitmapBank {
+    
+    private static final String MODE = "arctic_";
+
     private Bitmap background;
     private Bitmap player;
-    private Bitmap[] blocks;
-    private Boolean[] isBlockMinimized;
     private Bitmap pause;
     private Bitmap restart;
     private Bitmap play;
@@ -27,182 +27,231 @@ public class BitmapBank {
     private Bitmap soundOn;
     private Bitmap soundOff;
     private Bitmap portal;
-    public ArrayList<Integer> portalIdxs = new ArrayList<>();
-    private Bitmap b, b_special, b_double, b_finish, b_spring;
-
-    private int stepX, stepY;
-
-    private int numBlocksX;
-    private int numBlocksY;
+    private Bitmap blockSimple, blockSpecial, blockDouble, blockFinish, blockSpring;
 
     private int numBlocks;
+    private int numBlocksX, numBlocksY;
+    
+    private Bitmap[] blocks;
+    private boolean[] isBlockMinimized;
 
-    private double squeeze = 1.25;
-
-    public void maximizeAllBlocks() {
+    ArrayList<Integer> portalIndices = new ArrayList<>();
+    
+    private void maximizeAllBlocks() {
+        
         for (int i = 0; i < blocks.length; i++) {
             maximizeBlock(i);
         }
     }
-    public void maximizeBlock(int i) {
-        if (!isBlockMinimized[i])
+    
+    void maximizeBlock(int i) {
+        
+        if (!isBlockMinimized[i]) {
             return;
-        blocks[i] = Bitmap.createScaledBitmap(blocks[i], AppConstants.getBlockW(), AppConstants.getBlockH(), false);
-        Block b = AppConstants.getGameEngine().getBlocks().get(i);
-        b.setCoordX(b.getCoordX() - (int)(blocks[i].getWidth()  * (1.0 - 1 / squeeze) / 2));
+        }
+
+        blocks[i] = Bitmap.createScaledBitmap(
+                blocks[i],
+                AppConstants.getBlockW(),
+                AppConstants.getBlockH(),
+                false
+        );
 
         isBlockMinimized[i] = false;
     }
 
-    public static Bitmap getBitmap(String name) {
+    void minimizeBlock(int i) {
+
+        if (isBlockMinimized[i]) {
+            return;
+        }
+
+        blocks[i] = Bitmap.createScaledBitmap(
+                blocks[i],
+                (int)(blocks[i].getWidth() * AppConstants.SQUEEZE_BLOCK_COEFFICIENT),
+                (int)(blocks[i].getHeight() * AppConstants.SQUEEZE_BLOCK_COEFFICIENT),
+                false
+        );
+
+        isBlockMinimized[i] = true;
+    }
+
+    private static Bitmap getBitmap(String name) {
+        
         Context context = MyApp.getContext();
-        int resourceId = context.getResources().getIdentifier(name, "drawable", MyApp.getContext().getPackageName());
+        
+        int resourceId = context.getResources().getIdentifier(
+                name, 
+                "drawable", 
+                MyApp.getContext().getPackageName()
+        );
+        
         Drawable drawable = context.getResources().getDrawable(resourceId);
         
-        Bitmap bitmap = null;
-
         if (drawable instanceof BitmapDrawable) {
+            
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
+            
+            if (bitmapDrawable.getBitmap() != null) {
                 return bitmapDrawable.getBitmap();
             }
         }
 
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap;
+
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            // Single color bitmap will be created of 1x1 pixel
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); 
+        } 
+        else {
+            bitmap = Bitmap.createBitmap(
+                    drawable.getIntrinsicWidth(), 
+                    drawable.getIntrinsicHeight(), 
+                    Bitmap.Config.ARGB_8888
+            );
         }
 
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
+        
         return bitmap;
     }
 
-    public void minimizeBlock(int i) {
-        if (isBlockMinimized[i])
-            return;
-
-        Block b = AppConstants.getGameEngine().getBlocks().get(i);
-        b.setCoordX(b.getCoordX() + (int)(blocks[i].getWidth()    * (1.0 - 1 / squeeze) / 2));
-
-        blocks[i] = Bitmap.createScaledBitmap(blocks[i], (int)(blocks[i].getWidth() / squeeze), (int)(blocks[i].getHeight() / squeeze), false);
-        isBlockMinimized[i] = true;
-    }
-
     private Bitmap setImageSize(Bitmap bitmap, int width, int height) {
+        
         return Bitmap.createScaledBitmap(bitmap, width, height, false);
     }
 
     private Bitmap scaleImage(Bitmap bitmap) {
-        return Bitmap.createScaledBitmap(bitmap, (int)(AppConstants.getScreenWidth()), (int)(AppConstants.getScreenHeight()), false);
+        
+        return Bitmap.createScaledBitmap(
+                bitmap, 
+                AppConstants.getScreenWidth(), 
+                AppConstants.getScreenHeight(), 
+                false
+        );
     }
 
-    public void scalePlayer(double scale) {
-        player = getBitmap(mode + "player");
+    void scalePlayer(double scale) {
         
-        player = Bitmap.createScaledBitmap(player, (int)scale, (int)scale, false);
+        player = getBitmap(MODE + "player");
+        player = Bitmap.createScaledBitmap(
+                player, 
+                (int)scale, 
+                (int)scale, 
+                false
+        );
+        
         AppConstants.setPlayerW(player.getWidth());
         AppConstants.setPlayerH(player.getHeight());
     }
 
 
-    public void initBlocks(ArrayList<BlockType> block_types){
-        if (blocks == null) {
+    void initBlocks(ArrayList<BlockType> blockTypes) {
+        
+        if (blocks != null) {
+            AppConstants.getBitmapBank().maximizeAllBlocks();
+        }
+        else {
             blocks = new Bitmap[numBlocks];
 
             int startIdx = AppConstants.getGameEngine().getStartIdx();
             int endIdx   = AppConstants.getGameEngine().getEndIdx();
 
-            isBlockMinimized = new Boolean[numBlocks];
-            for (int i = 0; i < numBlocks; i++)
-                isBlockMinimized[i] = false;
+            isBlockMinimized = new boolean[numBlocks];
 
-            blocks[0] = b_special;
+            blocks[0] = blockSpecial;
             blocks[0] = setImageSize(blocks[0], player.getWidth(), player.getHeight());
 
             int j = 1;
+
             for (int i = 0; i < numBlocks; i++) {
                 if (i != startIdx && i != endIdx) {
-                    if (block_types.get(j) == BlockType.DESTROYABLE_2)
-                        blocks[j] = b_double;
-                    else if (block_types.get(j) == BlockType.SPRING)
-                        blocks[j] = b_spring;
-                    else if (block_types.get(j) == BlockType.PORTAL) {
-                        blocks[j] = portal;
-                        portalIdxs.add(j);
+                    if (blockTypes.get(j) == BlockType.DESTROYABLE_2) {
+                        blocks[j] = blockDouble;
                     }
-                    else
-                        blocks[j] = b;
+                    else if (blockTypes.get(j) == BlockType.SPRING) {
+                        blocks[j] = blockSpring;
+                    }
+                    else if (blockTypes.get(j) == BlockType.PORTAL) {
+                        blocks[j] = portal;
+                        portalIndices.add(j);
+                    }
+                    else {
+                        blocks[j] = blockSimple;
+                    }
 
                     boolean isPortal = false;
-                    for (int idx: portalIdxs) {
+                    for (int idx: portalIndices) {
                         if (idx == j) {
                             isPortal = true;
                         }
                     }
 
-                    if (isPortal)
-                        blocks[j] = setImageSize(blocks[j], player.getWidth() * 2, player.getHeight() * 2);
-                    else
-                        blocks[j] = setImageSize(blocks[j], player.getWidth(), player.getHeight());
+                    if (isPortal) {
+                        blocks[j] = setImageSize(
+                                blocks[j],
+                                player.getWidth() * 2,
+                                player.getHeight() * 2
+                        );
+                    }
+                    else {
+                        blocks[j] = setImageSize(
+                                blocks[j],
+                                player.getWidth(),
+                                player.getHeight()
+                        );
+                    }
 
                     j++;
                 }
             }
 
-
-            blocks[numBlocks - 1] = b_finish;
-            if (mode != "china_") {
-                blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight() * 2);
-            }
-            else {
-                blocks[numBlocks - 1] = setImageSize(blocks[numBlocks - 1], player.getWidth(), player.getHeight());
-            }
+            blocks[numBlocks - 1] = blockFinish;
+            blocks[numBlocks - 1] = setImageSize(
+                    blocks[numBlocks - 1],
+                    player.getWidth(),
+                    player.getHeight() * 2
+            );
 
             AppConstants.setBlockH(blocks[0].getHeight());
             AppConstants.setBlockW(blocks[0].getWidth());
-
         }
-        else
-            AppConstants.getBitmapBank().maximizeAllBlocks();
     }
 
-    public BitmapBank(Resources res) {
-        resources = res;
+    BitmapBank(Resources res) {
 
-        BitmapFactory.Options options_game_objects = new BitmapFactory.Options();
-        options_game_objects.inSampleSize = 8;
+        BitmapFactory.Options optionsGameObjects = new BitmapFactory.Options();
+        optionsGameObjects.inSampleSize = 8;
 
-        BitmapFactory.Options options_game_buttons = new BitmapFactory.Options();
-        options_game_buttons.inSampleSize = 1;
+        BitmapFactory.Options optionsGameButtons = new BitmapFactory.Options();
+        optionsGameButtons.inSampleSize = 1;
 
-        BitmapFactory.Options options_game_background = new BitmapFactory.Options();
-        options_game_background.inSampleSize = 1;
+        BitmapFactory.Options optionsGameBackground = new BitmapFactory.Options();
+        optionsGameBackground.inSampleSize = 1;
 
-        pause = BitmapFactory.decodeResource(res, R.drawable.pause, options_game_buttons);
-        restart = BitmapFactory.decodeResource(res, R.drawable.restart, options_game_buttons);
+        pause = BitmapFactory.decodeResource(res, R.drawable.pause, optionsGameButtons);
+        restart = BitmapFactory.decodeResource(res, R.drawable.restart, optionsGameButtons);
         restart = setImageSize(restart, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        play = BitmapFactory.decodeResource(res, R.drawable.play, options_game_buttons);
+        play = BitmapFactory.decodeResource(res, R.drawable.play, optionsGameButtons);
         play = setImageSize(play, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        soundOn = BitmapFactory.decodeResource(res, R.drawable.audio, options_game_buttons);
+        soundOn = BitmapFactory.decodeResource(res, R.drawable.audio, optionsGameButtons);
         soundOn = setImageSize(soundOn, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        soundOff = BitmapFactory.decodeResource(res, R.drawable.no_audio, options_game_buttons);
+        soundOff = BitmapFactory.decodeResource(res, R.drawable.no_audio, optionsGameButtons);
         soundOff = setImageSize(soundOff, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
-        exit = BitmapFactory.decodeResource(res, R.drawable.exit, options_game_buttons);
+        exit = BitmapFactory.decodeResource(res, R.drawable.exit, optionsGameButtons);
         exit = setImageSize(exit, (int)(1.0 * pause.getWidth()), (int)(1.0 * pause.getHeight()));
 
-        background = getBitmap(mode + "background");
+        background = getBitmap(MODE + "background");
         background = scaleImage(background);
-        player = getBitmap(mode + "player");
-        b = getBitmap(mode + "block");
-        b_special = getBitmap(mode + "block_special");
-        b_double = getBitmap(mode + "block_double");
-        b_finish = getBitmap(mode + "block_finish");
-        b_spring = getBitmap(mode + "block_spring");
-
-        portal = getBitmap(mode + "portal");
+        player = getBitmap(MODE + "player");
+        blockSimple = getBitmap(MODE + "block");
+        blockSpecial = getBitmap(MODE + "block_special");
+        blockDouble = getBitmap(MODE + "block_double");
+        blockFinish = getBitmap(MODE + "block_finish");
+        blockSpring = getBitmap(MODE + "block_spring");
+        portal = getBitmap(MODE + "portal");
 
         AppConstants.exitH = exit.getHeight();
         AppConstants.exitW = exit.getWidth();
@@ -223,91 +272,91 @@ public class BitmapBank {
         AppConstants.soundW = soundOn.getWidth();
         AppConstants.soundX = AppConstants.restartX - soundOn.getWidth();
         AppConstants.soundY = 0;
-
-
     }
 
-    public void flipPlayer() {
+    void flipPlayer() {
+
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
-        player = Bitmap.createBitmap(player, 0, 0, player.getWidth(), player.getHeight(), matrix, true);
+
+        player = Bitmap.createBitmap(
+                player, 0, 0, player.getWidth(), player.getHeight(), matrix, true
+        );
     }
 
-    public Bitmap getBackground() {
+    void rotatePlayer(float angle) {
+
+        Canvas canvas = new Canvas(player);
+        Matrix matrix = new Matrix();
+        matrix.setRotate(angle,player.getWidth() / 2,player.getHeight() / 2);
+
+        canvas.drawBitmap(player, matrix, new Paint());
+    }
+
+    Bitmap getBackground() {
         return background;
     }
 
-    public Bitmap[] getBlocks() { return blocks; }
+    Bitmap[] getBlocks() { return blocks; }
 
-    public void setBlocks(Bitmap[] blocks) {
+    void setBlocks(Bitmap[] blocks) {
         this.blocks = blocks;
     }
 
-    public Bitmap getPlayer() {
+    Bitmap getPlayer() {
         return player;
     }
 
-    public Bitmap getPause() {
+    Bitmap getPause() {
         return pause;
     }
 
-    public Bitmap getRestart() {
+    Bitmap getRestart() {
         return restart;
     }
 
-    public Bitmap getExit() {
+    Bitmap getExit() {
         return exit;
     }
 
-    public Bitmap getPlay() {
+    Bitmap getPlay() {
         return play;
     }
 
-    public Bitmap getSoundOn() {
+    Bitmap getSoundOn() {
         return soundOn;
     }
 
-    public Bitmap getSoundOff() {
+    Bitmap getSoundOff() {
         return soundOff;
     }
 
-    public int getBlocksNum() {
+    int getBlocksNum() {
         return numBlocks;
     }
 
-    public int getNumBlocksX() {
+    int getNumBlocksX() {
         return numBlocksX;
     }
 
-    public int getNumBlocksY() {
+    int getNumBlocksY() {
         return numBlocksY;
     }
 
-    public int getNumBlocks() {
+    int getNumBlocks() {
         return numBlocks;
     }
 
-    public void setStepX(int stepX) {
-        this.stepX = stepX;
-    }
-    public void setStepY(int stepY) {
-        this.stepY = stepY;
-    }
-
-    public void setNumBlocksX(int numBlocksX) {
+    void setNumBlocksX(int numBlocksX) {
         this.numBlocksX = numBlocksX;
     }
 
-    public void setNumBlocksY(int numBlocksY) {
+    void setNumBlocksY(int numBlocksY) {
         this.numBlocksY = numBlocksY;
     }
 
-    public void setNumBlocks(int numBlocks) {
+    void setNumBlocks(int numBlocks) {
         this.numBlocks = numBlocks;
-    }
-
-    public String getMode() {
-        return mode;
     }
 }
 

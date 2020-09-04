@@ -1,22 +1,17 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameThread extends Thread {
 
-    private SurfaceHolder surfaceHolder;
+    private final SurfaceHolder surfaceHolder;
     private boolean isRunning;
-    private long startTime, loopTime;
-    private long delay = 33;
 
-    private Paint levelText = new Paint();
+    GameThread(SurfaceHolder holder) {
 
-
-    public GameThread(SurfaceHolder holder) {
         this.surfaceHolder = holder;
         isRunning = true;
     }
@@ -25,20 +20,24 @@ public class GameThread extends Thread {
     public void run() {
 
         while (isRunning) {
-            startTime = SystemClock.uptimeMillis();
+
+            long startTime = SystemClock.uptimeMillis();
             Canvas canvas = surfaceHolder.lockCanvas(null);
+
             if (canvas != null) {
                 synchronized (surfaceHolder) {
                     AppConstants.getGameEngine().updateAndDrawBackgroundImage(canvas);
                     AppConstants.getGameEngine().updateBlocks(canvas);
                     AppConstants.getGameEngine().updateAndDrawPlayer(canvas);
                     AppConstants.getGameEngine().updateCollision();
-                    AppConstants.getGameEngine().updateAutoPlaying();
 
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             }
-            loopTime = SystemClock.uptimeMillis() - startTime;
+
+            long loopTime = SystemClock.uptimeMillis() - startTime;
+            long delay = 33;
+
             if (loopTime < delay) {
                 try {
                     Thread.sleep(delay - loopTime);
@@ -51,11 +50,11 @@ public class GameThread extends Thread {
         }
     }
 
-    public boolean isRunning() {
+    boolean isRunning() {
         return isRunning;
     }
 
-    public void setIsRunning(boolean state) {
+    void setRunning(boolean state) {
         isRunning = state;
     }
 

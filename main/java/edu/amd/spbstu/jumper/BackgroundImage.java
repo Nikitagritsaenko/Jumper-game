@@ -1,28 +1,19 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
-public class BackgroundImage {
+class BackgroundImage {
+
     private int backgroundImageX, backgroundImageY;
 
-    public BackgroundImage() {
+    BackgroundImage() {
         backgroundImageX = 0;
         backgroundImageY = 0;
     }
 
-    public int getX() {
+    int getX() {
         return backgroundImageX;
     }
 
-    public int getY() {
+    int getY() {
         return backgroundImageY;
     }
-
-
-    public void setX(int backgroundImageX) {
-        this.backgroundImageX = backgroundImageX;
-    }
-
-    public void setY(int backgroundImageY) {
-        this.backgroundImageY = backgroundImageY;
-    }
-
 }

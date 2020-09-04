@@ -1,4 +1,4 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import android.content.Intent;
 import android.os.Build;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import jumper.R;
+
 
 public class GameLevels extends AppCompatActivity {
 
@@ -23,7 +25,8 @@ public class GameLevels extends AppCompatActivity {
         setContentView(R.layout.gamelevels);
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Button button_back = (Button)findViewById(R.id.button_back);
+        Button button_back = findViewById(R.id.button_back);
+
         button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,18 +37,20 @@ public class GameLevels extends AppCompatActivity {
                     startActivity(intent);
                     finish();
 
-                }catch (Exception e) {
-
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }
         });
 
         int levelsUnlocked = AppConstants.getGameEngine().loadUserProgress();
-        //int levelsUnlocked = 20;
+
         for (int i = 1; i <= levelsUnlocked; i++) {
-            String id = "textView" + Integer.toString(i);
+            String id = "textView" + i;
             int resID = getResources().getIdentifier(id, "id", getPackageName());
-            final TextView textView = (TextView) findViewById(resID);
+
+            final TextView textView = findViewById(resID);
+
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -61,33 +66,38 @@ public class GameLevels extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } catch (Exception e) {
-
+                        System.out.println(e.getMessage());
                     }
                 }
             });
+
             textView.setText(Integer.toString(i));
         }
 
         for (int i = levelsUnlocked + 1; i <= AppConstants.getNumLevels(); i++) {
-            String id = "textView" + Integer.toString(i);
+            String id = "textView" + i;
             int resID = getResources().getIdentifier(id, "id", getPackageName());
-            final TextView textView = (TextView) findViewById(resID);
+            final TextView textView = findViewById(resID);
             textView.setBackgroundResource(R.drawable.locked);
             textView.setText("");
         }
 
         // fullscreen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            w.setFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            );
+
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
-
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             super.onWindowFocusChanged(hasFocus);
+
             if (hasFocus) {
                 getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -95,7 +105,8 @@ public class GameLevels extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                );
             }
         }
 
@@ -110,7 +121,7 @@ public class GameLevels extends AppCompatActivity {
             finish();
         }
         catch (Exception e) {
-
+            System.out.println(e.getMessage());
         }
     }
 
@@ -118,6 +129,4 @@ public class GameLevels extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
     }
-
-
 }

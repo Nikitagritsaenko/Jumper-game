@@ -1,15 +1,16 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import java.util.ArrayList;
 
-public class LevelGenerator {
-    public static ArrayList<LevelData> data = new ArrayList<>();
+class LevelGenerator {
+
+    private static ArrayList<LevelData> data = new ArrayList<>();
+
     private int sizeX, sizeY;
     private int startIdx, endIdx;
-    public static Integer[] x;
-    public static Integer[] y;
 
     private void setBitmapParams() {
+
         AppConstants.getBitmapBank().setNumBlocksX(sizeX);
         AppConstants.getBitmapBank().setNumBlocksY(sizeY);
         AppConstants.getBitmapBank().setNumBlocks(sizeY * sizeX);
@@ -17,20 +18,21 @@ public class LevelGenerator {
         int stepX = AppConstants.getScreenWidth() / (sizeX + 1);
         int stepY = (int)((double) AppConstants.getScreenHeight() / (sizeY + 1.5));
 
-        AppConstants.getBitmapBank().setStepX(stepX);
-        AppConstants.getBitmapBank().setStepY(stepY);
-
         AppConstants.setGridStepX(stepX);
         AppConstants.setGridStepY(stepY);
+        AppConstants.setGravity(stepY / AppConstants.GRAVITY_SCALE_COEFFICIENT);
 
         AppConstants.getBitmapBank().scalePlayer(Math.min(stepX / 2.0, stepY / 2.0));
         AppConstants.getGameEngine().getPlayer().setFlipped(false);
 
     }
 
-    public void initLevels() {
-        if (data.size() != 0)
+    private void initLevels() {
+
+        if (data.size() != 0) {
             return;
+        }
+
         // ALL LEVELS DATA SETS HERE ------------------------------------------------------------------------------------------------
 
         data.add(new LevelData(1, 6, 8, 5, 2, new int[]
@@ -353,12 +355,12 @@ public class LevelGenerator {
                         1, 2, 2, 0, 0, 1, 0, 1, 2, 2, 1, 0,
                         }));
 
-
         // --------------------------------------------------------------------------------------------------------------------------
     }
 
-    public int[] getBlockIdxs(int level) {
-        LevelData ld = data.get(level-1);
+    private int[] getBlockIndices(int level) {
+
+        LevelData ld = data.get(level - 1);
         sizeX = ld.getNumX();
         sizeY = ld.getNumY();
         startIdx = ld.getStartIdx();
@@ -370,38 +372,40 @@ public class LevelGenerator {
         return ld.getIndices();
     }
 
-    public ArrayList<Block> generateBlocks(int level) {
+    ArrayList<Block> generateBlocks(int level) {
+        
         initLevels();
 
-        int[] activeBlocks = getBlockIdxs(level);
-        x = new Integer[sizeX * sizeY];
-        y = new Integer[sizeX * sizeY];
+        int[] activeBlocks = getBlockIndices(level);
+        Integer[] x = new Integer[sizeX * sizeY];
+        Integer[] y = new Integer[sizeX * sizeY];
 
         setBitmapParams();
 
-        int tx = (int)AppConstants.getGridStepX();
-        int ty = (int)AppConstants.getGridStepY();
+        int tx = AppConstants.getGridStepX();
+        int ty = AppConstants.getGridStepY();
 
-        int shiftX = 0, shiftY = 0;
+        int shiftX = 0, shiftY;
 
         int numBlocksX = AppConstants.getBitmapBank().getNumBlocksX();
-        int numBlocksY = AppConstants.getBitmapBank().getNumBlocksY();
         int numBlocks  = AppConstants.getBitmapBank().getNumBlocks();
 
         for (int i = 0; i < numBlocks; i++) {
-            if (i % numBlocksX != 0)
+            if (i % numBlocksX != 0) {
                 shiftX += tx;
-            else
+            }
+            else {
                 shiftX = tx / 2;
+            }
 
             shiftY = ty / 2 + (i / numBlocksX) * ty + ty;
+            
             x[i] = shiftX;
             y[i] = shiftY;
         }
 
         ArrayList<Block> blocks = new ArrayList<>();
-
-
+        
         Block block_start = new Block(BlockType.START, x[startIdx], y[startIdx]);
         block_start.setIdx(startIdx);
         block_start.setPos(0);
@@ -410,30 +414,33 @@ public class LevelGenerator {
         for (int i = 0; i < numBlocks; i++) {
             if (i != startIdx && i != endIdx) {
                 Block block;
-                if (activeBlocks[i] == 1)
+                if (activeBlocks[i] == 1) {
                     block = new Block(BlockType.DESTROYABLE_1, x[i], y[i]);
-                else if (activeBlocks[i] == 2)
+                }
+                else if (activeBlocks[i] == 2) {
                     block = new Block(BlockType.DESTROYABLE_2, x[i], y[i]);
-                else if (activeBlocks[i] == 3)
+                }
+                else if (activeBlocks[i] == 3) {
                     block = new Block(BlockType.SPRING, x[i], y[i]);
+                }
                 else if (activeBlocks[i] == 4) {
                     block = new Block(BlockType.PORTAL, x[i], y[i]);
                 }
-                else
+                else {
                     block = new Block(BlockType.EMPTY, x[i], y[i]);
+                }
+                
                 blocks.add(block);
                 block.setIdx(i);
-                block.setPos(blocks.size()-1);
+                block.setPos(blocks.size() - 1);
             }
         }
-
-
-        Block block_end = new Block(BlockType.END, x[endIdx], y[endIdx]);
-        blocks.add( block_end);
-        block_end.setIdx(endIdx);
-        block_end.setPos(blocks.size()-1);
+        
+        Block blockEnd = new Block(BlockType.END, x[endIdx], y[endIdx]);
+        blocks.add(blockEnd);
+        blockEnd.setIdx(endIdx);
+        blockEnd.setPos(blocks.size() - 1);
 
         return blocks;
     }
-
 }

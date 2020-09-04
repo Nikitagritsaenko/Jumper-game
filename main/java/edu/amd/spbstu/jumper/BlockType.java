@@ -1,4 +1,4 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 public enum BlockType {
     START,
@@ -7,6 +7,5 @@ public enum BlockType {
     DESTROYABLE_2,
     SPRING,
     PORTAL,
-    EMPTY,
-    BLOCK_TYPE_DIM
+    EMPTY
 }

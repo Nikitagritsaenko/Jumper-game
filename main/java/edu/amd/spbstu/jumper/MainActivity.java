@@ -1,4 +1,4 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +15,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import jumper.R;
+
 public class MainActivity extends AppCompatActivity {
+
     private long backPressedTime;
     private static Toast backToast;
 
     private static void cancelToast() {
+
         if (backToast != null) {
             backToast.cancel();
         }
@@ -27,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button buttonStart = (Button)findViewById(R.id.buttonStart);
+        Button buttonStart = findViewById(R.id.buttonStart);
 
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } catch (Exception e) {
-
+                    System.out.println(e.getMessage());
                 }
             }
         });
@@ -51,10 +56,12 @@ public class MainActivity extends AppCompatActivity {
 
         DisplayMetrics metrics = new DisplayMetrics();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             display.getRealMetrics(metrics);
-        else
+        }
+        else {
             display.getMetrics(metrics);
+        }
 
         AppConstants.setScreenHeight(metrics.heightPixels);
         AppConstants.setScreenWidth(metrics.widthPixels);
@@ -63,13 +70,18 @@ public class MainActivity extends AppCompatActivity {
 
         // fullscreen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            w.setFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            );
+
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             super.onWindowFocusChanged(hasFocus);
             if (hasFocus) {
@@ -79,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                );
             }
         }
 
@@ -88,10 +101,13 @@ public class MainActivity extends AppCompatActivity {
     //system back button
     @Override
     public void onBackPressed() {
+
         long timeToPressAgain = 2000;
+
         if (backPressedTime + timeToPressAgain > System.currentTimeMillis()) {
             backToast.cancel();
             super.onBackPressed();
+
             return;
         } else {
             Context context = getBaseContext();
@@ -99,15 +115,12 @@ public class MainActivity extends AppCompatActivity {
             backToast.setDuration(Toast.LENGTH_SHORT);
             backToast.show();
         }
+
         backPressedTime = System.currentTimeMillis();
     }
 
     @Override
     protected void onDestroy() {
-        SoundPlayer sp = AppConstants.getSoundPlayer();
-        if (sp != null) {
-            //sp.release();
-        }
         super.onDestroy();
     }
 
@@ -115,6 +128,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
     }
-
 
 }

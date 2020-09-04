@@ -1,71 +1,74 @@
-package edu.amd.spbstu.jumper;
+package grits.jumper;
 
-public class Player {
+class Player {
+
     private double X;
     private double Y;
     private double velocity;
     private boolean isFlipped = false;
 
-    public double getVelocity() {
+    double getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(double velocity) {
+    void setVelocity(double velocity) {
         this.velocity = velocity;
     }
 
-    public Player() {
+    Player() {
         velocity = 0;
     }
 
-    public double getX() {
+    double getX() {
         return X;
     }
 
-    public double getY() {
+    double getY() {
         return Y;
     }
 
-    public void setX(double X) {
+    void setX(double X) {
         this.X = X;
     }
 
-    public void setY(double Y) {
+    void setY(double Y) {
         this.Y = Y;
     }
 
-    public void moveRight() {
-        if (AppConstants.getGameEngine().getGameState() == GameStates.PAUSED) {
+    void moveRight() {
+
+        if (AppConstants.getGameEngine().getGameState() == GameState.PAUSED) {
             return;
         }
+
         if (isFlipped) {
             AppConstants.getBitmapBank().flipPlayer();
             isFlipped = false;
-            System.out.println("Flip FALSE");
-
         }
-        GameEngine.setMovingRight(true);
 
+        GameEngine.setMovingRight(true);
     }
 
-    public void moveLeft() {
-        if (AppConstants.getGameEngine().getGameState() == GameStates.PAUSED) {
+    void moveLeft() {
+
+        if (AppConstants.getGameEngine().getGameState() == GameState.PAUSED) {
             return;
         }
+
         if (!isFlipped) {
             AppConstants.getBitmapBank().flipPlayer();
             isFlipped = true;
-            System.out.println("Flip TRUE");
         }
+
         GameEngine.setMovingLeft(true);
     }
 
 
-    public void setFlipped(boolean flipped) {
+    void setFlipped(boolean flipped) {
         isFlipped = flipped;
     }
 
-    public boolean isFlipped() {
+    boolean isFlipped() {
         return isFlipped;
     }
 }
