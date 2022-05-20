@@ -5,9 +5,7 @@ Simple and fun puzzle. Android 4.1+.
 How to win? Reach the last block and destroy all intermediate blocks.
 
 ## Download
-First version available.
-
-Download game here: https://yadi.sk/d/gUScoBrzqVPRwQ
+Download game here: https://disk.yandex.ru/d/y2SpAQvP3pHbOw
 
 ## Game screenshots
 ![](https://github.com/Nikitagritsaenko/Jumper-game/blob/master/screenshots/screen1.jpg)
