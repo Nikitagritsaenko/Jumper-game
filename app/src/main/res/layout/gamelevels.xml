@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/background4" />
+
+    <LinearLayout
+        android:id="@+id/container1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/container2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#001303F4"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:visibility="visible"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/container3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_stroke_black95_press_white"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="@string/back"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="21sp" />
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+
+                <LinearLayout
+                    android:id="@+id/container4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/line1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView1"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="2"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="3"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="4"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="5"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="6"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView7"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="7"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="8"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/line2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="9"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="10"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView11"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="11"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView12"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="12"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView13"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="13"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView14"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="14"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView15"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="15"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView16"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="16"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/line3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView17"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="17"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView18"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="18"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView19"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="19"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView20"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="20"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView21"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="21"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="22"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView23"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="23"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView24"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="24"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/line4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView25"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="25"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView26"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="26"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView27"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="27"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView28"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="28"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView29"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="29"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView30"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="30"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView31"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="31"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView32"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="32"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/line5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView33"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="33"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView34"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="34"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView35"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="35"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView36"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="36"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView37"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="37"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView38"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="38"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView39"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="39"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView40"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="40"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+		<LinearLayout
+                        android:id="@+id/line6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView41"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="41"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView42"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="42"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView43"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="43"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView44"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="44"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView45"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="45"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView46"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="46"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView47"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="47"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView48"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="48"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+		<LinearLayout
+                        android:id="@+id/line7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView49"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="49"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView50"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="50"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView51"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="51"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView52"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="52"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView53"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="53"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView54"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="54"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView55"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="55"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView56"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/button_gamelevels"
+                            android:gravity="center"
+                            android:text="56"
+                            android:textColor="@color/white"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+		
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
